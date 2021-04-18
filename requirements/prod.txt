@@ -1,0 +1,9 @@
+# Everything needed in production
+# Flask
+Flask==1.1.2
+
+# Security
+werkzeug==1.0.1
+
+# Deployment
+gunicorn==20.1.0
