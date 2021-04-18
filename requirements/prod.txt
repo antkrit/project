@@ -1,6 +1,8 @@
 # Everything needed in production
 # Flask
 Flask==1.1.2
+Flask-Migrate==2.7.0
+Flask-SQLAlchemy==2.5.1
 
 # Security
 werkzeug==1.0.1
