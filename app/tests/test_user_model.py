@@ -1,5 +1,5 @@
 """Test the User model"""
-from ..models.user import User
+from app.models.user import User
 
 
 def test_create_and_add_user():

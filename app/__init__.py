@@ -25,4 +25,4 @@ def create_app(test_config: dict = None) -> Flask:
     return curr_app
 
 
-from .models import user
+from app.models import user

@@ -1,0 +1,6 @@
+[coverage:run]
+source = app
+omit = *tests*, *migrations*, *config.py, **__init__.py, *app.py, *setup.py
+
+[coverage:report]
+fail_under = 80

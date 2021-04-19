@@ -1,9 +1,11 @@
+# Editor
 .idea/
+venv/
 
+# Cache
 .pytest_cache/
 __pycache__/
 
-venv/
-**/*.db
-
+# Files
+*.db
 .coverage

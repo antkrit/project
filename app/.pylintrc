@@ -15,7 +15,7 @@ extension-pkg-whitelist=
 fail-under=10.0
 
 # Files or directories to be skipped. They should be base names, not paths.
-ignore=CVS, documentation, migrations
+ignore=CVS, migrations, documentation
 
 # Files or directories matching the regex patterns are skipped. The regex
 # matches against base names, not paths.
@@ -36,7 +36,7 @@ limit-inference-results=100
 
 # List of plugins (as comma separated values of python module names) to load,
 # usually to register additional checkers.
-load-plugins=pylint_flask_sqlalchemy, pylint_flask
+load-plugins=pylint_flask_sqlalchemy
 
 # Pickle collected data for later comparisons.
 persistent=yes

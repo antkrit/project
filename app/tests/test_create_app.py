@@ -8,4 +8,4 @@ def test_create_copy_app():
 
     app = create_app()
     app_with_custom_config = create_app({"SECRET_KEY": "test"})
-    assert isinstance(app, Flask) and app_with_custom_config is not None
+    assert isinstance(app, Flask) and isinstance(app_with_custom_config, Flask)
