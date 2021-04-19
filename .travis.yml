@@ -11,11 +11,13 @@ python:
 before_install:
   - python -m pip install --upgrade pip
 install:
-  - pip3 install -r requirements/dev.txt
+  - python -m pip install -r requirements/dev.txt
 
 before_script:
+  - cd app
   - flask db upgrade
+  - cd ..
 script:
-  - pytest --cov=app
+  - pytest --cov=app --cov-config=app/.coveragerc
 after_success:
   - coveralls
