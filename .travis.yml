@@ -14,10 +14,10 @@ install:
   - python -m pip install -r requirements/dev.txt
 
 before_script:
-  - cd app
+  - cd module
   - flask db upgrade
   - cd ..
 script:
-  - pytest --cov=app --cov-config=app/.coveragerc
+  - pytest --cov=module --cov-config=module/.coveragerc --cov-report term-missing
 after_success:
   - coveralls
