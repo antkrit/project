@@ -15,7 +15,7 @@ for the admin account
 ## 1. Login
 Once the user gets to the site, a window is displayed, which offers to enter the login and password
 
-![](../static/img/login.jpg)
+![](static/img/login.jpg)
 
 ##### Main scenario:
 + User enters his login and password in the appropriate fields
@@ -31,7 +31,7 @@ If the administrator is not logged in, the default cabinet will be displayed
 + User select item "Info"
 + Application displays table with main information
 
-![](../static/img/info.jpg)
+![](static/img/info.jpg)
 
 The table has the following rows:
 + Address - home address of the user
@@ -52,7 +52,7 @@ Payment is made using payment cards that can be purchased at the store
 + User click at the button "Enter"
 + If the code is correct, the user's balance will be replenished, otherwise a corresponding message will be displayed
 
-![](../static/img/payment.jpg)
+![](static/img/payment.jpg)
 
 ### 2.3 History
 
@@ -60,7 +60,7 @@ Payment is made using payment cards that can be purchased at the store
 + User select item "History"
 + Application displays table with payment history
 
-![](../static/img/history.jpg)
+![](static/img/history.jpg)
 
 The table has the following columns:
 + Date - payment date with exact time
@@ -70,7 +70,7 @@ The table has the following columns:
 ## 3. Admin
 If the user is logged in using the admin username then he gets access to the admin panel
 
-![](../static/img/admin.jpg)
+![](static/img/admin.jpg)
 
 The page has the following components:
 * Buttons:
@@ -86,7 +86,7 @@ The page has the following components:
 
 ## Register
 
-![](../static/img/register.jpg)
+![](static/img/register.jpg)
 
 The form has the following components:
 * Fields:

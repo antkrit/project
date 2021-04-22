@@ -6,6 +6,8 @@ python:
   - 3.7
   - 3.8
   - 3.9
+env:
+  - FLASK_APP=module/app.py
 
 # install dependencies
 before_install:
@@ -14,10 +16,8 @@ install:
   - python -m pip install -r requirements/dev.txt
 
 before_script:
-  - cd app
   - flask db upgrade
-  - cd ..
 script:
-  - pytest --cov=app --cov-config=app/.coveragerc
+  - pytest --cov=module --cov-config=module/.coveragerc
 after_success:
   - coveralls
