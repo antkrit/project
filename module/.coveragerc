@@ -3,4 +3,4 @@ source = app
 omit = *tests*, *migrations*, *config.py, *forms.py, **__init__.py, *app.py, *setup.py
 
 [coverage:report]
-fail_under = 80
+fail_under = 90

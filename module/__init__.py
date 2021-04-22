@@ -1,4 +1,5 @@
 """Initializes all dependencies and creates apps"""
+import os
 from datetime import timedelta
 from flask import Flask, session
 from flask_migrate import Migrate
@@ -27,18 +28,24 @@ class App:
 
         :param testing: determines whether to create a program in test mode
         """
-        self._app = Flask(__name__, template_folder='./client/templates', static_folder='./client/static')
+        # Folders
+        self.migration_folder = os.path.join('module', 'server', 'models', 'migrations')
+        self.templates_folder = os.path.join('.', 'client', 'templates')
+        self.static_folder = os.path.join('.', 'client', 'static')
+
+        # App
+        self._app = Flask(__name__, template_folder=self.templates_folder, static_folder=self.static_folder)
         self._app.config.from_object(TestConfig) if testing else self._app.config.from_object(Config)
 
         App.db.init_app(self._app)
-        App.migrate.init_app(self._app, App.db)
+        App.migrate.init_app(self._app, App.db, directory=self.migration_folder)
         App.login_manager.init_app(self._app)
 
         @self._app.before_request
         def before_request():
             # Updates the session time before each request to server. Sets it to 5 minutes (may be changed).
             session.permanent = True
-            self._app.permanent_session_lifetime = timedelta(minutes=5)
+            self._app.permanent_session_lifetime = timedelta(minutes=2)
 
     def register_blueprints(self, *args):
         """
