@@ -9,5 +9,8 @@ Flask-WTF==0.14.3
 # Security
 werkzeug==1.0.1
 
+# Enviroment
+python-dotenv==0.17.0
+
 # Deployment
 gunicorn==20.1.0
