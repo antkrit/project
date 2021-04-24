@@ -1,5 +1,6 @@
-from flask import render_template, redirect, url_for, request
-from flask_login import login_required, current_user
+"""Define the route of the user cabinet"""
+from flask import render_template
+from flask_login import login_required
 
 from module.server.view.cabinet import bp
 

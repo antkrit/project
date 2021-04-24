@@ -1,59 +1,9 @@
-import pytest
-from flask import template_rendered
+"""Testing route /cabinet"""
 from flask_login import current_user
-from contextlib import contextmanager
-
-from module import App
-from module.server.models.user import User
-from module.server.view.login import bp as login_bp
-from module.server.view.cabinet import bp as cabinet_bp
+from module.tests import captured_templates, init_app
 
 
-@pytest.fixture
-def init_app():
-    """Init and return app in test mode with in-memory database"""
-
-    # Init
-    runner = App(testing=True)
-    runner.register_blueprints(login_bp, cabinet_bp)
-    app = runner.get_flask_app()
-    db = runner.db
-    app_context = app.app_context()
-
-    # Setup
-    app_context.push()
-    db.create_all()
-
-    usr = User(username='john')
-    usr.set_password('test')
-
-    db.session.add(usr)
-    db.session.commit()
-    yield app
-
-    # Teardown
-    db.session.remove()
-    db.drop_all()
-    app_context.pop()
-
-
-@contextmanager
-def captured_templates(app):
-    """Determines which templates were rendered and what variables were passed to the template"""
-    recorded = []
-
-    def record(sender, template, context, **extra):
-        recorded.append((template, context))
-
-    template_rendered.connect(record, app)
-
-    try:
-        yield recorded
-    finally:
-        template_rendered.disconnect(record, app)
-
-
-def test_login_view_access_and_render(init_app):
+def test_cabinet_view_access_and_render(init_app):
     """Make sure route '/cabinet' works and template with cabinet form is rendered"""
     app = init_app
 

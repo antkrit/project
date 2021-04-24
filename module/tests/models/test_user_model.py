@@ -1,42 +1,6 @@
 """Test the User model"""
-import pytest
-from module import App
+from module.tests import setup_database, dataset
 from module.server.models.user import User, load_user
-
-
-@pytest.fixture(scope='function')
-def setup_database():
-    """Fixture to set up the in-memory database"""
-    # Init
-    runner = App(testing=True)
-    app = runner.get_flask_app()
-    db = runner.db
-    app_context = app.app_context()
-
-    # Setup
-    app_context.push()
-    db.create_all()
-    yield db
-
-    # Teardown
-    db.session.remove()
-    db.drop_all()
-    app_context.pop()
-
-
-@pytest.fixture(scope='function')
-def dataset(setup_database):
-
-    db = setup_database
-
-    # Creates users
-    john = User(username='john')
-    andre = User(username='andre')
-    db.session.add(john)
-    db.session.add(andre)
-    db.session.commit()
-
-    yield db
 
 
 def test_create_and_add_user(dataset):
@@ -94,4 +58,3 @@ def test_load_user(dataset):
 
     test_user = load_user('1')
     assert test_user.__repr__() == 'User: john'
-
