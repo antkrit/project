@@ -1,6 +1,6 @@
 """Testing route /cabinet"""
 from flask_login import current_user
-from module.tests import captured_templates, init_app
+from module.tests import captured_templates, init_app, login_user
 
 
 def test_cabinet_view_access_and_render(init_app):
@@ -14,12 +14,11 @@ def test_cabinet_view_access_and_render(init_app):
             assert response_cabinet_view.status_code == 302
 
             # Authenticate user
-            response_login_user = client.post('/',
-                                   data=dict(username='john', password='test'),
-                                   follow_redirects=True)
+            response_login_user = login_user(client, 'john', 'test')
             assert current_user.is_authenticated
             assert response_login_user.status_code == 200
 
+        # Template 'cabinet' was rendered
         template, context = templates[0]
         assert len(templates) == 1
         assert template.name == 'cabinet/cabinet.html'

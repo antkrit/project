@@ -5,9 +5,88 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Username</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <title>Cabinet</title>
 </head>
 <body>
-
+    <div class="username">
+        <div class="container">
+            <div class="username__inner">
+                <div class="username__tabs">
+                    <nav class="username__tabs-list">
+                        <a href="#tab_01" class="username__tabs-item">Info</a>
+                        <a href="#tab_02" class="username__tabs-item">Payment</a>
+                        <a href="#tab_03" class="username__tabs-item">History</a>
+                    </nav>
+                    <div class="username__tabs-content">
+                        <div id="tab_01" class="username__tabs-block">
+                            <div class="info">
+                                <div class="info__left">
+                                    <strong>Address</strong>
+                                    <strong>Name</strong>
+                                    <strong>IP</strong>
+                                    <strong>Phone</strong>
+                                    <strong>Email</strong>
+                                    <strong>Tariff</strong>
+                                    <strong>Balance</strong>
+                                    <strong>State</strong>
+                                </div>
+                                <div class="info__right">
+                                    <small>St.Sezam</small>
+                                    <small>Surname Name Example</small>
+                                    <small>127.0.0.1</small>
+                                    <small>+38095545445</small>
+                                    <small>mail@Example.com</small>
+                                    <small>100m</small>
+                                    <small>0 uah</small>
+                                    <small>active</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab_02" class="username__tabs-block">
+                            <div class="payment">
+                                <form action="" class="payment__form" method="post">
+                                    <label for="name">Serial number</label>
+                                    <input type="text" id="name" name="user_name">
+                                    <button class="btn" type="submit">Enter</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div id="tab_03" class="username__tabs-block">
+                            <div class="history">
+                                <div class="history__block">
+                                    <h3 class="history__title">Date</h3>
+                                    <ul class="history__list">
+                                        <li>2021.02.22 23:00:34</li>
+                                        <li>2021.02.22 23:00:34</li>
+                                        <li>2021.02.22 23:00:34</li>
+                                        <li>2021.02.22 23:00:34</li>
+                                    </ul>
+                                </div>
+                                <div class="history__block">
+                                    <h3 class="history__title">Sum</h3>
+                                    <ul class="history__list">
+                                        <li>200</li>
+                                        <li>200</li>
+                                        <li>200</li>
+                                        <li>200</li>
+                                    </ul>
+                                </div>
+                                <div class="history__block">
+                                    <h3 class="history__title">Balance</h3>
+                                    <ul class="history__list">
+                                        <li>0</li>
+                                        <li>0</li>
+                                        <li>0</li>
+                                        <li>0</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

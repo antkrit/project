@@ -8,7 +8,7 @@ def test_create_and_add_user(dataset):
 
     db = dataset
 
-    # Creates user object
+    # User object
     usr = User(
         name="Some Name Surname",
         phone="+380961122333",

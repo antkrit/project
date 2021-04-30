@@ -1,5 +1,6 @@
 """Initializes all dependencies and creates apps"""
 import os
+import uuid
 import logging
 from datetime import timedelta
 from logging.handlers import RotatingFileHandler, SMTPHandler
@@ -12,7 +13,7 @@ from module.server.config import Config, TestConfig
 
 
 class App:
-    """Creates and configures the flask app (Application factory)"""
+    """Creates and configures the flask app (Application-factory)"""
 
     db = SQLAlchemy()
     migrate = Migrate()
@@ -41,7 +42,11 @@ class App:
         self._app.config.from_object(TestConfig) if testing else self._app.config.from_object(Config)
 
         App.db.init_app(self._app)
-        App.migrate.init_app(self._app, App.db, directory=self.migration_folder)
+        with self._app.app_context():  # Fixing ALTER table SQLite issue
+            if App.db.engine.url.drivername == 'sqlite':
+                App.migrate.init_app(self._app, App.db, render_as_batch=True, directory=self.migration_folder)
+            else:
+                App.migrate.init_app(self._app, App.db, directory=self.migration_folder)
         App.login_manager.init_app(self._app)
 
         self.setup_logging()
@@ -114,6 +119,58 @@ class App:
         """Returns an object with Flask instance."""
         return self._app
 
+    @staticmethod
+    def fill_test_data(user_model, card_model):
+        """
+        Fills database tables with test data
+
+        :param user_model: the object with which the user is created
+        :param card_model: the object with which the payment card is created
+        """
+        # Creates two additional users with and without email
+        usr1 = user_model(
+            username='john',
+            phone='+380991122333',
+            email='example@test.com',
+            tariff='50m',
+            ip='127.0.0.1',
+            address='Mazepa st. 43'
+        )
+        usr1.set_password('test')
+        App.db.session.add(usr1)
+
+        usr2 = user_model(
+            username='andre',
+            phone='+380992244555',
+            tariff='100m',
+            ip='127.0.0.2',
+            address='Doroshenko st. 53'
+        )
+        usr2.set_password('test')
+        App.db.session.add(usr2)
+
+        num_200_test_cards = 5  # number of cards with amount 200
+        num_400_test_cards = 6  # number of cards with amount 400
+
+        # Creates cards with codes in range 000000-000004 and amount 200
+        for i in range(num_200_test_cards):
+            rand_uuid = str(uuid.uuid4())
+            card = card_model(
+                uuid=rand_uuid,
+                amount=200,
+                code=str(i).rjust(6, '0')
+            )
+            App.db.session.add(card)
+        # Creates cards with codes in range 000005-000010 and amount 400
+        for i in range(num_200_test_cards, num_200_test_cards+num_400_test_cards):
+            rand_uuid = str(uuid.uuid4())
+            card = card_model(
+                uuid=rand_uuid,
+                amount=400,
+                code=str(i).rjust(6, '0')
+            )
+            App.db.session.add(card)
+
     def run(self, name):
         """
         Launches the application in debug mode BUT NOT in testing mode(using global database instead of temporary).
@@ -125,22 +182,27 @@ class App:
 
         :param name: the name of the file in which this function is called
         """
-        from module.server.models.user import User
+        from module.server.models import user, payment_cards  # These imports are also required for migration
+
+        # Database models
+        user_model = user.User
+        card_model = payment_cards.Card
 
         @self._app.before_first_request
         def before_first_request():
-            user = User.query.first()
-            if not user:
+            usr = user_model.query.first()
+            if not usr:
                 # If the first row in the table doesn't exist
                 # Creates account with login "admin" and password "test"(both fields may be changed).
-                admin = User(username='admin')
+                admin = user_model(username='admin')
                 admin.set_password('test')
-
-                # Add & save to the database
                 App.db.session.add(admin)
-                App.db.session.commit()
 
-        self._app.logger.info('Website startup')
+                # Fill the database with test data
+                App.fill_test_data(user_model, card_model)
+
+                # Commit changes
+                App.db.session.commit()
 
         if name == '__main__':
             # Run the application with debug mode(not testing) if file was started directly ($ python file.py).

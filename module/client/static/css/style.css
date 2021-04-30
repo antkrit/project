@@ -1,3 +1,22 @@
+html, body, div, ol, ul, li, a
+h1, h2, h3, h4, h5, h6, small {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+a {
+    color: #000000;
+    text-decoration: none;
+}
+
+ol, ul{
+    list-style: none;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
 }
@@ -103,4 +122,78 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.username__inner {
+    padding: 20px;
+}
+
+.username__tabs-item {
+    padding: 10px 16px;
+    background-color: #cccccc;
+}
+
+.username__tabs-content {
+    padding: 20px 0;
+}
+
+.username__tabs-block {
+    display: none;
+}
+
+.username__tabs-block:target {
+    display: block;
+}
+
+.info {
+    display: flex;
+}
+
+.info__left, .info__right {
+    display: flex;
+    flex-direction: column;
+}
+
+.info__left {
+    background-color: #c0c0c0;
+}
+
+.info__right {
+    width: 100%;
+}
+
+.info__left strong, .info__right small {
+    padding: 10px 16px;
+    border: 1px solid #000;
+}
+
+.payment__form {
+    display: flex;
+    align-items: center;
+}
+
+.payment__form input {
+    border: 1px solid #000;
+    margin: 0 20px;
+    padding: 5px 0;
+}
+
+.history {
+    display: flex;
+    justify-content: space-between;
+}
+
+.history__block {
+    width: 100%;
+}
+
+.history__list li{
+    padding: 10px;
+    border: 1px solid #000;
+}
+
+.history__title {
+    background-color: #c0c0c0;
+    padding: 10px;
+    border: 1px solid #000;
 }

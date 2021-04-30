@@ -1,6 +1,6 @@
 """Define the route of the user cabinet"""
-from flask import render_template
-from flask_login import login_required
+from flask import render_template, redirect, url_for
+from flask_login import login_required, current_user
 
 from module.server.view.cabinet import bp
 
@@ -16,4 +16,8 @@ def cabinet_view():
     Methods: GET, POST
     """
 
-    return render_template('cabinet/cabinet.html')
+    return render_template(
+        'cabinet/cabinet.html',
+        user_info=current_user.get_info(),
+        user_history=current_user.get_history()
+    )
