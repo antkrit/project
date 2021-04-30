@@ -6,6 +6,7 @@ from module import App
 from module.server.models.user import User
 from module.server.view.login import bp as login_bp
 from module.server.view.cabinet import bp as cabinet_bp
+from module.server.view.admin import bp as admin_bp
 
 
 @contextmanager
@@ -30,7 +31,7 @@ def init_app():
 
     # Init
     runner = App(testing=True)
-    runner.register_blueprints(login_bp, cabinet_bp)
+    runner.register_blueprints(login_bp, cabinet_bp, admin_bp)
     app = runner.get_flask_app()
     db = runner.db
     app_context = app.app_context()
@@ -39,9 +40,13 @@ def init_app():
     app_context.push()
     db.create_all()
 
+    adm_usr = User(username='admin')
+    adm_usr.set_password('test')
+
     usr = User(username='john')
     usr.set_password('test')
 
+    db.session.add(adm_usr)
     db.session.add(usr)
     db.session.commit()
     yield app
@@ -74,7 +79,11 @@ def setup_database():
 
 @pytest.fixture
 def dataset(setup_database):
-    """Populate database"""
+    """
+    Populate database.
+
+    :param setup_database: pytest fixture
+    """
     db = setup_database
 
     # Creates users
@@ -85,3 +94,26 @@ def dataset(setup_database):
     db.session.commit()
 
     yield db
+
+
+def login_user(client, username, password):
+    """
+    User authorization on POST request to login view
+
+    :param client: test client of the flask application
+    :param username: login of the user
+    :param password: password of the user
+    """
+    return client.post('/', data=dict(
+        username=username,
+        password=password
+    ), follow_redirects=True)
+
+
+def logout_user(client):
+    """
+    User logout on POST request to logout iew
+
+    :param client: test client of the flask application
+    """
+    return client.get('/logout', follow_redirects=True)
