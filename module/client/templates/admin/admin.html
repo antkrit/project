@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin">
+    <div class="container">
+        <div class="admin__inner">
+            <div class="admin__top">
+                <div class="admin__users-list">
+                    <div class="admin__users-item">
+                        <div class="admin__users-item--title">
+                            <h5>Users</h5>
+                        </div>
+                        <span>{{ data_general_table['num_users'] }}</span>
+                    </div>
+                    <div class="admin__users-item">
+                        <div class="admin__users-item--title">
+                            <h5>Active users</h5>
+                        </div>
+                        <span>{{ data_general_table['num_active_users'] }}</span>
+                    </div>
+                    <div class="admin__users-item">
+                        <div class="admin__users-item--title">
+                            <h5>Non-used cards</h5>
+                        </div>
+                        <span>{{ data_general_table['num_non_used_cards'] }}</span>
+                    </div>
+                    <div class="admin__users-item">
+                        <div class="admin__users-item--title">
+                            <h5>Total debt</h5>
+                        </div>
+                        <span>{{ data_general_table['total_debt'] }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="admin__main">
+                <div class="admin__search">
+                    <form action="" class="admin__form">
+                        <div>
+                            <label>
+                                <input class="admin__input" type="text" placeholder="Username">
+                            </label>
+                            <button class="btn">Search</button>
+                        </div>
+                        <button class="btn" type="submit">Register new user</button>
+                    </form>
+                </div>
+                <div class="admin__search-list">
+                    <div class="admin__search-item">
+                        <div class="admin__search-item--title">
+                            <h5>Address</h5>
+                        </div>
+                        <span>St.Some, 41</span>
+                    </div>
+                    <div class="admin__search-item">
+                        <div class="admin__search-item--title">
+                            <h5>Name</h5>
+                        </div>
+                        <span>Surname Name Example</span>
+                    </div>
+                    <div class="admin__search-item">
+                        <div class="admin__search-item--title">
+                            <h5>IP</h5>
+                        </div>
+                        <span>127.0.0.2</span>
+                    </div>
+                    <div class="admin__search-item">
+                        <div class="admin__search-item--title">
+                            <h5>Phone</h5>
+                        </div>
+                        <span>+3809643637</span>
+                    </div>
+                    <div class="admin__search-item">
+                        <div class="admin__search-item--title">
+                            <h5>Email</h5>
+                        </div>
+                        <span>@example.com</span>
+                    </div>
+                    <div class="admin__search-item">
+                        <div class="admin__search-item--title">
+                            <h5>Tariff</h5>
+                        </div>
+                        <span>50m</span>
+                    </div>
+                    <div class="admin__search-item">
+                        <div class="admin__search-item--title">
+                            <h5>Balance</h5>
+                        </div>
+                        <span>0</span>
+                    </div>
+                    <div class="admin__search-item">
+                        <div class="admin__search-item--title">
+                            <h5>State</h5>
+                        </div>
+                        <span>active</span>
+                    </div>
+                </div>
+                <div class="admin__search-submit">
+                    <form action="" class="admin__search-form">
+                        <div class="admin__search__buttons">
+                            <button class="btn">Active</button>
+                            <button class="btn">Deactivate</button>
+                            <button class="btn">Delete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

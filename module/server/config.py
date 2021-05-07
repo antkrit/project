@@ -1,3 +1,4 @@
+"""File with different 'config' objects for the flask app"""
 import os
 from dotenv import load_dotenv
 

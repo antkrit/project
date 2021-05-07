@@ -1,7 +1,8 @@
 """Initializes all dependencies and creates apps"""
 import os
-import uuid
 import logging
+from json import load
+from uuid import uuid4
 from datetime import timedelta
 from logging.handlers import RotatingFileHandler, SMTPHandler
 from flask import Flask, session
@@ -10,6 +11,12 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
 from module.server.config import Config, TestConfig
+
+
+with open(os.path.join(os.path.dirname(__file__), 'pkg_info.json')) as info:
+    _info = load(info)
+
+__version__ = _info['version']
 
 
 class App:
@@ -39,7 +46,10 @@ class App:
 
         # App
         self._app = Flask(__name__, template_folder=self.templates_folder, static_folder=self.static_folder)
-        self._app.config.from_object(TestConfig) if testing else self._app.config.from_object(Config)
+        if testing:  # Choose configuration
+            self._app.config.from_object(TestConfig)
+        else:
+            self._app.config.from_object(Config)
 
         App.db.init_app(self._app)
         with self._app.app_context():  # Fixing ALTER table SQLite issue
@@ -120,10 +130,9 @@ class App:
         return self._app
 
     @staticmethod
-    def fill_test_data(user_model, card_model):
+    def fill_test_data(user_model, card_model, tariffs, states):
         """
         Fills database tables with test data
-
         :param user_model: the object with which the user is created
         :param card_model: the object with which the payment card is created
         """
@@ -132,9 +141,11 @@ class App:
             username='john',
             phone='+380991122333',
             email='example@test.com',
-            tariff='50m',
+            tariff=tariffs.tariff_50m.value['tariff_name'],
             ip='127.0.0.1',
-            address='Mazepa st. 43'
+            address='Mazepa st. 43',
+            state=states.activated_state.value,
+            balance=0
         )
         usr1.set_password('test')
         App.db.session.add(usr1)
@@ -142,9 +153,11 @@ class App:
         usr2 = user_model(
             username='andre',
             phone='+380992244555',
-            tariff='100m',
+            tariff=tariffs.tariff_50m.value['tariff_name'],
             ip='127.0.0.2',
-            address='Doroshenko st. 53'
+            address='Doroshenko st. 53',
+            state=states.activated_state.value,
+            balance=0
         )
         usr2.set_password('test')
         App.db.session.add(usr2)
@@ -154,16 +167,17 @@ class App:
 
         # Creates cards with codes in range 000000-000004 and amount 200
         for i in range(num_200_test_cards):
-            rand_uuid = str(uuid.uuid4())
+            rand_uuid = str(uuid4())
             card = card_model(
                 uuid=rand_uuid,
                 amount=200,
                 code=str(i).rjust(6, '0')
             )
             App.db.session.add(card)
+
         # Creates cards with codes in range 000005-000010 and amount 400
-        for i in range(num_200_test_cards, num_200_test_cards+num_400_test_cards):
-            rand_uuid = str(uuid.uuid4())
+        for i in range(num_200_test_cards, num_200_test_cards + num_400_test_cards):
+            rand_uuid = str(uuid4())
             card = card_model(
                 uuid=rand_uuid,
                 amount=400,
@@ -184,9 +198,10 @@ class App:
         """
         from module.server.models import user, payment_cards  # These imports are also required for migration
 
-        # Database models
         user_model = user.User
         card_model = payment_cards.Card
+        tariffs = user.Tariffs
+        states = user.State
 
         @self._app.before_first_request
         def before_first_request():
@@ -199,7 +214,7 @@ class App:
                 App.db.session.add(admin)
 
                 # Fill the database with test data
-                App.fill_test_data(user_model, card_model)
+                App.fill_test_data(user_model, card_model, tariffs, states)
 
                 # Commit changes
                 App.db.session.commit()
