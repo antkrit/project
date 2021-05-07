@@ -1,3 +1,4 @@
+"""Tests Payment Cards model"""
 import uuid
 from module.tests import setup_database
 from module.server.models.payment_cards import Card, UsedCard

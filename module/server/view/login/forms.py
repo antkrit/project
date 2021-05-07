@@ -9,12 +9,16 @@ class LoginForm(FlaskForm):
     User login form.
 
     Fields: username - login of the user, password - password of the user
-    Buttons: submit - sends data from the fields to the server for verification
+    Buttons: submit - sends data from fields to the server for processing
     """
-    username = StringField('Username',
-                           validators=[DataRequired(), Length(1, 64)],
-                           render_kw={'class': 'login__input', 'placeholder': 'Username'})
-    password = PasswordField('Password',
-                             validators=[DataRequired()],
-                             render_kw={'class': 'login__input', 'placeholder': 'Password', 'autocomplete': 'off'})
+    username = StringField(
+        'Username',
+        validators=[DataRequired(), Length(1, 64)],
+        render_kw={'class': 'login__input', 'placeholder': 'Username'}
+    )
+    password = PasswordField(
+        'Password',
+        validators=[DataRequired()],
+        render_kw={'class': 'login__input', 'placeholder': 'Password', 'autocomplete': 'off'}
+    )
     submit = SubmitField('Sign In', render_kw={'class': 'btn'})

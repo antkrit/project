@@ -33,9 +33,10 @@
                     <div id="tab_02" class="username__tabs-block">
                         <div class="payment">
                             <form action="" class="payment__form" method="post">
+                                {{ form.hidden_tag() }}
                                 <label for="name">Serial number</label>
-                                <input type="text" id="name" name="user_name">
-                                <button class="btn" type="submit">Enter</button>
+                                <div id="name">{{ form.code() }}</div>
+                                <p>{{ form.submit() }}</p>
                             </form>
                         </div>
                     </div>
@@ -44,7 +45,7 @@
                             <div class="history__block">
                                 <h3 class="history__title">Date</h3>
                                 <ul class="history__list">
-                                    {% for history in user_history %}
+                                    {% for history in user_history |reverse %}
                                         <li>{{ history.used_at }}</li>
                                     {% endfor %}
                                 </ul>
@@ -52,7 +53,7 @@
                             <div class="history__block">
                                 <h3 class="history__title">Sum</h3>
                                 <ul class="history__list">
-                                    {% for history in user_history %}
+                                    {% for history in user_history |reverse %}
                                         <li>{{ history.amount }}</li>
                                     {% endfor %}
                                 </ul>
@@ -60,7 +61,7 @@
                             <div class="history__block">
                                 <h3 class="history__title">Balance</h3>
                                 <ul class="history__list">
-                                    {% for history in user_history %}
+                                    {% for history in user_history |reverse %}
                                         <li>{{ history.balance_after_use }}</li>
                                     {% endfor %}
                                 </ul>

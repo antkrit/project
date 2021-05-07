@@ -1,9 +1,12 @@
+"""Setup fixtures and common functions"""
 import pytest
 
+from uuid import uuid4
 from flask import template_rendered
 from contextlib import contextmanager
 from module import App
 from module.server.models.user import User
+from module.server.models.payment_cards import Card
 from module.server.view.login import bp as login_bp
 from module.server.view.cabinet import bp as cabinet_bp
 from module.server.view.admin import bp as admin_bp
@@ -42,12 +45,30 @@ def init_app():
 
     adm_usr = User(username='admin')
     adm_usr.set_password('test')
+    db.session.add(adm_usr)
 
     usr = User(username='john')
     usr.set_password('test')
-
-    db.session.add(adm_usr)
     db.session.add(usr)
+
+    for i in range(2):
+        rand_uuid = str(uuid4())
+        card = Card(
+            uuid=rand_uuid,
+            amount=200,
+            code=str(i).rjust(6, '0')
+        )
+        db.session.add(card)
+
+    for i in range(2, 4):
+        rand_uuid = str(uuid4())
+        card = Card(
+            uuid=rand_uuid,
+            amount=400,
+            code=str(i).rjust(6, '0')
+        )
+        db.session.add(card)
+
     db.session.commit()
     yield app
 
@@ -88,7 +109,9 @@ def dataset(setup_database):
 
     # Creates users
     john = User(username='john')
+    john.set_password('test')
     andre = User(username='andre')
+    andre.set_password('test')
     db.session.add(john)
     db.session.add(andre)
     db.session.commit()

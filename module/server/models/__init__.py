@@ -1,3 +1,6 @@
+"""Base classes for models with common methods"""
+
+
 class BaseCard:
     """Base model for payment cards"""
     @classmethod

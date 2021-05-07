@@ -8,21 +8,51 @@ def test_login_view_access_and_render(init_app):
     """Make sure route '/' works and template with login form is rendered"""
     app = init_app
 
-    with captured_templates(app) as templates:
+    with app.test_client() as client:
+        with captured_templates(app) as templates:
 
-        # GET request to the route
-        response = app.test_client().get('/')
-        assert response.status_code == 200
-        assert len(templates) == 1
+            # GET request to the route
+            response = client.get('/')
+            assert response.status_code == 200
+            assert len(templates) == 1  # ['auth/login.html']
 
-        # Template 'login' was rendered
-        template, context = templates[0]
-        assert template.name == 'auth/login.html'
-        assert isinstance(context['form'], FlaskForm)
+            # Template 'login' was rendered
+            template, context = templates[-1]
+            assert template.name == 'auth/login.html'
+            assert isinstance(context['form'], FlaskForm)
+
+            # Login admin and try to access login view
+            response_login_admin = login_user(client, 'admin', 'test')
+            assert response_login_admin.status_code == 200
+
+            response_get_login_view = client.get('/')
+            assert len(templates) == 2  # ['auth/login.html', 'admin/admin.html']
+
+            template, context = templates[-1]
+            assert response_get_login_view.status_code == 302
+            assert template.name == 'admin/admin.html'
+
+            responce_logout_admin = logout_user(client)
+            assert len(templates) == 3  # ['auth/login.html', 'admin/admin.html', 'auth/login.html']
+            assert responce_logout_admin.status_code == 200
+            assert current_user.is_anonymous
+
+            # Login user and try to access login view
+            response_login_admin = login_user(client, 'john', 'test')
+            assert response_login_admin.status_code == 200
+
+            response_get_login_view = client.get('/')
+            assert len(templates) == 4  # [..., 'cabinet/cabinet.html']
+
+            template, context = templates[-1]
+            assert response_get_login_view.status_code == 302
+            assert template.name == 'cabinet/cabinet.html'
 
 
 def test_logout(init_app):
+    """Tests logout current user"""
     app = init_app
+
     with app.test_client() as client:
         # Login user 'john'
         response_login = login_user(client, 'john', 'test')
