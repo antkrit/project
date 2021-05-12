@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% from "jinja_helpers.html" import render_field %}
+{% from "jinja_helpers.html" import render_button %}
+
+{% block content %}
+<div class="register">
+    <div class="container">
+        <div class="register__inner">
+            <h3 class="title">Register</h3>
+            <form method="POST" class="register__form" novalidate>
+                {{ form.hidden_tag() }}
+                <label>
+                    {{ render_field(form.username) }}
+                </label>
+                <label>
+                    {{ render_field(form.email) }}
+                </label>
+                <label>
+                    {{ render_field(form.password) }}
+                </label>
+                <label>
+                    {{ render_field(form.repeat_password) }}
+                </label>
+                <label>
+                    {{ render_field(form.phone) }}
+                </label>
+                <label>
+                    {{ render_field(form.name) }}
+                </label>
+                <label>
+                    {{ render_field(form.address) }}
+                </label>
+                {{ render_field(form.tariff_select) }}
+                {{ render_button(form.submit) }}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% from "jinja_helpers.html" import render_field %}
+{% from "jinja_helpers.html" import render_button %}
 
 {% block content %}
 <div class="admin">
@@ -34,75 +36,78 @@
             </div>
             <div class="admin__main">
                 <div class="admin__search">
-                    <form action="" class="admin__form">
+                    <form method="post" action="{{ url_for('admin.admin_view') }}" class="admin__form">
+                        {{ search_form.hidden_tag() }}
                         <div>
                             <label>
-                                <input class="admin__input" type="text" placeholder="Username">
+                                {{ render_field(search_form.username) }}
                             </label>
-                            <button class="btn">Search</button>
+                            {{ render_button(search_form.search_button) }}
+                            {{ render_button(interact_form.register_button) }}
                         </div>
-                        <button class="btn" type="submit">Register new user</button>
                     </form>
                 </div>
+                {% if user %}
                 <div class="admin__search-list">
                     <div class="admin__search-item">
                         <div class="admin__search-item--title">
                             <h5>Address</h5>
                         </div>
-                        <span>St.Some, 41</span>
+                        <span>{{ user.address }}</span>
                     </div>
                     <div class="admin__search-item">
                         <div class="admin__search-item--title">
                             <h5>Name</h5>
                         </div>
-                        <span>Surname Name Example</span>
+                        <span>{{ user.name }}</span>
                     </div>
                     <div class="admin__search-item">
                         <div class="admin__search-item--title">
                             <h5>IP</h5>
                         </div>
-                        <span>127.0.0.2</span>
+                        <span>{{ user.ip }}</span>
                     </div>
                     <div class="admin__search-item">
                         <div class="admin__search-item--title">
                             <h5>Phone</h5>
                         </div>
-                        <span>+3809643637</span>
+                        <span>{{ user.phone }}</span>
                     </div>
                     <div class="admin__search-item">
                         <div class="admin__search-item--title">
                             <h5>Email</h5>
                         </div>
-                        <span>@example.com</span>
+                        <span>{{ user.email }}</span>
                     </div>
                     <div class="admin__search-item">
                         <div class="admin__search-item--title">
                             <h5>Tariff</h5>
                         </div>
-                        <span>50m</span>
+                        <span>{{ user.tariff }}</span>
                     </div>
                     <div class="admin__search-item">
                         <div class="admin__search-item--title">
                             <h5>Balance</h5>
                         </div>
-                        <span>0</span>
+                        <span>{{ user.balance }}</span>
                     </div>
                     <div class="admin__search-item">
                         <div class="admin__search-item--title">
                             <h5>State</h5>
                         </div>
-                        <span>active</span>
+                        <span>{{ user.state }}</span>
                     </div>
                 </div>
                 <div class="admin__search-submit">
-                    <form action="" class="admin__search-form">
+                    <form method="POST" class="admin__search-form">
                         <div class="admin__search__buttons">
-                            <button class="btn">Active</button>
-                            <button class="btn">Deactivate</button>
-                            <button class="btn">Delete</button>
+                            {{ render_button(interact_form.activate_button) }}
+                            {{ render_button(interact_form.deactivate_button) }}
+                            {{ render_button(interact_form.delete_button) }}
                         </div>
                     </form>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>

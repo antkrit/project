@@ -24,7 +24,6 @@ button {
     background: none
 }
 
-
 form {
     margin: 0;
 }
@@ -79,12 +78,17 @@ body {
     font-size: 24px;
 }
 
-.login__input {
-    margin-bottom: 20px;
+.input-field {
+    margin-bottom: 5px;
+    padding: 6px 10px;
 }
 
-.login__input, .register__input, .admin__input {
-    padding: 6px 10px;
+.is-invalid {
+    border: 1px solid red;
+}
+
+.invalid-feedback {
+    color: red;
 }
 
 .register__form {
@@ -129,10 +133,6 @@ body {
 .admin__form-label {
     display: flex;
     align-items: center;
-}
-
-.admin__search {
-    margin-bottom: 30px;
 }
 
 .admin__search-list {

@@ -102,7 +102,6 @@ def setup_database():
 def dataset(setup_database):
     """
     Populate database.
-
     :param setup_database: pytest fixture
     """
     db = setup_database
@@ -122,7 +121,6 @@ def dataset(setup_database):
 def login_user(client, username, password):
     """
     User authorization on POST request to login view
-
     :param client: test client of the flask application
     :param username: login of the user
     :param password: password of the user
@@ -136,7 +134,6 @@ def login_user(client, username, password):
 def logout_user(client):
     """
     User logout on POST request to logout iew
-
     :param client: test client of the flask application
     """
     return client.get('/logout', follow_redirects=True)

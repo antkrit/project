@@ -1,19 +1,21 @@
 {% extends "base.html" %}
+{% from "jinja_helpers.html" import render_field %}
+{% from "jinja_helpers.html" import render_button %}
 
 {% block content %}
 <div class="login">
     <div class="container">
         <div class="login__inner">
             <h3 class="title">Login</h3>
-            <form action="" class="login__form" method="POST">
+            <form method="POST" class="login__form" novalidate>
                 {{ form.hidden_tag() }}
                 <label>
-                    {{ form.username() }}
+                    {{ render_field(form.username) }}
                 </label>
                 <label>
-                    {{ form.password() }}
+                    {{ render_field(form.password) }}
                 </label>
-                <p>{{ form.submit() }}</p>
+                {{ render_button(form.submit) }}
             </form>
         </div>
     </div>

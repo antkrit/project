@@ -130,38 +130,12 @@ class App:
         return self._app
 
     @staticmethod
-    def fill_test_data(user_model, card_model, tariffs, states):
+    def fill_test_data(card_model, tariffs, states):
         """
         Fills database tables with test data
         :param user_model: the object with which the user is created
         :param card_model: the object with which the payment card is created
         """
-        # Creates two additional users with and without email
-        usr1 = user_model(
-            username='john',
-            phone='+380991122333',
-            email='example@test.com',
-            tariff=tariffs.tariff_50m.value['tariff_name'],
-            ip='127.0.0.1',
-            address='Mazepa st. 43',
-            state=states.activated_state.value,
-            balance=0
-        )
-        usr1.set_password('test')
-        App.db.session.add(usr1)
-
-        usr2 = user_model(
-            username='andre',
-            phone='+380992244555',
-            tariff=tariffs.tariff_50m.value['tariff_name'],
-            ip='127.0.0.2',
-            address='Doroshenko st. 53',
-            state=states.activated_state.value,
-            balance=0
-        )
-        usr2.set_password('test')
-        App.db.session.add(usr2)
-
         num_200_test_cards = 5  # number of cards with amount 200
         num_400_test_cards = 6  # number of cards with amount 400
 
@@ -211,10 +185,10 @@ class App:
                 # Creates account with login "admin" and password "test"(both fields may be changed).
                 admin = user_model(username='admin')
                 admin.set_password('test')
-                App.db.session.add(admin)
+                admin.save_to_db()
 
                 # Fill the database with test data
-                App.fill_test_data(user_model, card_model, tariffs, states)
+                App.fill_test_data(card_model, tariffs, states)
 
                 # Commit changes
                 App.db.session.commit()

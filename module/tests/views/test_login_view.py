@@ -57,8 +57,8 @@ def test_logout(init_app):
         # Login user 'john'
         response_login = login_user(client, 'john', 'test')
         assert response_login.status_code == 200
-        assert current_user.username == 'john'
         assert current_user.is_authenticated
+        assert current_user.username == 'john'
 
         # Logout user 'john'
         response_logout = logout_user(client)
