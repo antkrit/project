@@ -10,7 +10,7 @@ setup(
     name='User cabinet',
     version=_info['version'],
     description='Epam final project',
-    platforms=['win32', 'linux'],
+    platforms='win32, linux',
     author=_info['author'],
     author_email=_info['author_email'],
     zip_safe=False,

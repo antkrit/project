@@ -1,0 +1,16 @@
+{% macro render_field(field) %}
+    {% if field.errors %}
+        {{ field(class="input-field is-invalid") }}
+        <div class="invalid-feedback">
+            {% for error in field.errors %}
+                <small>{{ error }}</small>
+            {% endfor %}
+        </div>
+    {% else %}
+        {{ field(class="input-field") }}
+    {% endif %}
+{% endmacro %}
+
+{%  macro render_button(button) %}
+    {{ button(class="btn") }}
+{%  endmacro %}

@@ -1,5 +1,5 @@
 """Define the route of the login form"""
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, current_app
 from flask_login import current_user, login_user, logout_user
 
 from module.server.models.user import User
@@ -19,16 +19,22 @@ def login_view():
         return redirect(url_for('cabinet.cabinet_view'))
 
     login_form = f.LoginForm()
-    if login_form.validate_on_submit() or request.method == 'POST':  # If user clicked the "Sign In" button
-        user = User.query.filter_by(username=login_form.username.data).first()
+    if request.method == "POST":
+        data = request.form
 
-        if user and user.check_password(login_form.password.data):  # If such login exists, login and password match
-            login_user(user)
+        if login_form.validate_on_submit() or (data and current_app.testing):
+            # If user clicked the "Sign In" button or there is data in the request while testing app
+            username = data.get('username')
+            password = data.get('password')
 
-            if user.username == 'admin':  # If user is admin
-                return redirect(url_for('admin.admin_view'))
-            return redirect(url_for('cabinet.cabinet_view'))
-        return redirect(url_for('login.login_view'))
+            user = User.query.filter_by(username=username).first()
+            if user and user.check_password(password):  # If such login exists, login and password match
+                login_user(user)
+
+                if user.username == 'admin':  # If user is admin
+                    return redirect(url_for('admin.admin_view'))
+                return redirect(url_for('cabinet.cabinet_view'))
+            return redirect(url_for('login.login_view'))
     return render_template('auth/login.html', title='Login', form=login_form)
 
 
