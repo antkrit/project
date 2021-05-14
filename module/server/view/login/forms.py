@@ -14,11 +14,11 @@ class LoginForm(FlaskForm):
     username = StringField(
         'Username',
         validators=[DataRequired(), Length(1, 64)],
-        render_kw={'class': 'input-field', 'placeholder': 'Username'}
+        render_kw={'placeholder': 'Username'}
     )
     password = PasswordField(
         'Password',
         validators=[DataRequired()],
-        render_kw={'class': 'input-field', 'placeholder': 'Password', 'autocomplete': 'off'}
+        render_kw={'placeholder': 'Password', 'autocomplete': 'off'}
     )
-    submit = SubmitField('Sign In', render_kw={'class': 'btn'})
+    submit = SubmitField('Sign In')

@@ -40,11 +40,11 @@
                         {{ search_form.hidden_tag() }}
                         <div>
                             <label>
-                                {{ render_field(search_form.username) }}
+                                {{ render_field(search_form.username, "admin__field" )}}
                             </label>
                             {{ render_button(search_form.search_button) }}
-                            {{ render_button(interact_form.register_button) }}
                         </div>
+                        {{ render_button(interact_form.register_button) }}
                     </form>
                 </div>
                 {% if user %}

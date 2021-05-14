@@ -10,10 +10,10 @@
             <form method="POST" class="login__form" novalidate>
                 {{ form.hidden_tag() }}
                 <label>
-                    {{ render_field(form.username) }}
+                    {{ render_field(form.username, "login__field") }}
                 </label>
                 <label>
-                    {{ render_field(form.password) }}
+                    {{ render_field(form.password, "login__field") }}
                 </label>
                 {{ render_button(form.submit) }}
             </form>

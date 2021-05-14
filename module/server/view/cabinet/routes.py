@@ -1,5 +1,5 @@
 """Define the route of the user cabinet"""
-from flask import render_template, redirect, url_for, request, current_app
+from flask import render_template, redirect, url_for, request, current_app, flash
 from flask_login import login_required, current_user
 
 from module.server.view.cabinet import bp, forms as f

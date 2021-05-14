@@ -7,6 +7,7 @@ from datetime import timedelta
 from logging.handlers import RotatingFileHandler, SMTPHandler
 from flask import Flask, session
 from flask_migrate import Migrate
+from flask_moment import Moment
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
@@ -24,6 +25,7 @@ class App:
 
     db = SQLAlchemy()
     migrate = Migrate()
+    moment = Moment()
     login_manager = LoginManager()
     login_manager.login_view = 'login.login_view'
     login_manager.session_protection = 'strong'
@@ -39,10 +41,10 @@ class App:
         :param testing: determines whether to create a program in test mode
         """
         # Folders
-        self.migration_folder = os.path.join('module', 'server', 'models', 'migrations')
-        self.templates_folder = os.path.join('.', 'client', 'templates')
-        self.static_folder = os.path.join('.', 'client', 'static')
-        self.logs_folder = os.path.join('module', 'logs')
+        self.migration_folder = os.path.join(os.path.dirname(__file__), 'server', 'models', 'migrations')
+        self.templates_folder = os.path.join(os.path.dirname(__file__), 'client', 'templates')
+        self.static_folder = os.path.join(os.path.dirname(__file__), 'client', 'static')
+        self.logs_folder = os.path.join(os.path.dirname(__file__), 'logs')
 
         # App
         self._app = Flask(__name__, template_folder=self.templates_folder, static_folder=self.static_folder)
@@ -50,14 +52,16 @@ class App:
             self._app.config.from_object(TestConfig)
         else:
             self._app.config.from_object(Config)
-
+        
         App.db.init_app(self._app)
         with self._app.app_context():  # Fixing ALTER table SQLite issue
             if App.db.engine.url.drivername == 'sqlite':
                 App.migrate.init_app(self._app, App.db, render_as_batch=True, directory=self.migration_folder)
             else:
                 App.migrate.init_app(self._app, App.db, directory=self.migration_folder)
+
         App.login_manager.init_app(self._app)
+        App.moment.init_app(self._app)
 
         self.setup_logging()
 
@@ -71,7 +75,6 @@ class App:
         """
         Registers blueprints required for the application routes to work.
         To register a new blueprint, just pass it to arguments along with the others.
-
         *args: array of blueprints
         """
         for bp in args:
@@ -83,7 +86,6 @@ class App:
     def setup_logging(self, logs_folder=None, log_level=logging.DEBUG):
         """
         Configures the app logging system.
-
         :param logs_folder: folder where log files will be stored
         :param log_level: logger level (debug, info, warning, error, exception, critical)
         """
@@ -129,70 +131,16 @@ class App:
         """Returns an object with Flask instance."""
         return self._app
 
-    @staticmethod
-    def fill_test_data(card_model, tariffs, states):
-        """
-        Fills database tables with test data
-        :param user_model: the object with which the user is created
-        :param card_model: the object with which the payment card is created
-        """
-        num_200_test_cards = 5  # number of cards with amount 200
-        num_400_test_cards = 6  # number of cards with amount 400
-
-        # Creates cards with codes in range 000000-000004 and amount 200
-        for i in range(num_200_test_cards):
-            rand_uuid = str(uuid4())
-            card = card_model(
-                uuid=rand_uuid,
-                amount=200,
-                code=str(i).rjust(6, '0')
-            )
-            App.db.session.add(card)
-
-        # Creates cards with codes in range 000005-000010 and amount 400
-        for i in range(num_200_test_cards, num_200_test_cards + num_400_test_cards):
-            rand_uuid = str(uuid4())
-            card = card_model(
-                uuid=rand_uuid,
-                amount=400,
-                code=str(i).rjust(6, '0')
-            )
-            App.db.session.add(card)
-
     def run(self, name):
         """
         Launches the application in debug mode BUT NOT in testing mode(using global database instead of temporary).
-
-        Also sets the decorator "before_first_request", which checks whether there are records in the database.
-        If not then creates an account for the admin (account with id 1).
-        To set a password for the admin, change the argument of the set_password function.
-        WARNING: do not show or publish this password anywhere
-
         :param name: the name of the file in which this function is called
         """
-        from module.server.models import user, payment_cards  # These imports are also required for migration
-
-        user_model = user.User
-        card_model = payment_cards.Card
-        tariffs = user.Tariffs
-        states = user.State
-
-        @self._app.before_first_request
-        def before_first_request():
-            usr = user_model.query.first()
-            if not usr:
-                # If the first row in the table doesn't exist
-                # Creates account with login "admin" and password "test"(both fields may be changed).
-                admin = user_model(username='admin')
-                admin.set_password('test')
-                admin.save_to_db()
-
-                # Fill the database with test data
-                App.fill_test_data(card_model, tariffs, states)
-
-                # Commit changes
-                App.db.session.commit()
 
         if name == '__main__':
-            # Run the application with debug mode(not testing) if file was started directly ($ python file.py).
+            # Run the application with debug mode(not testing) if file was started directly ($ python file.py)
+            self._app.logger.info('Website startup')
             self._app.run(debug=True)
+
+
+from module.server.models import user, payment_cards  # these imports are required for migration
