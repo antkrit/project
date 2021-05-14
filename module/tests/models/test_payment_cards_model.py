@@ -26,7 +26,6 @@ def test_create_and_add_cards(setup_database):
     assert len(db.session.query(Card).all()) == 2
 
     # Fields
-    assert db.session.query(Card).get(2).uuid is not None
     assert db.session.query(Card).get(2).amount == 0
     assert db.session.query(Card).get(2).code == '000000'
 
@@ -50,7 +49,6 @@ def test_create_and_add_cards(setup_database):
     assert len(db.session.query(UsedCard).all()) == 2
 
     # Default fields
-    assert db.session.query(UsedCard).get(2).uuid is not None
     assert db.session.query(UsedCard).get(2).amount == 0
     assert db.session.query(UsedCard).get(2).code == '000000'
     assert db.session.query(UsedCard).get(2).balance_after_use == 0

@@ -60,6 +60,25 @@ body {
     background-color: #222222;
 }
 
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.alert-info {
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+  color: #31708f;
+}
+
+.alert-warning {
+  background-color: #fcf8e3;
+  border-color: #faebcc;
+  color: #8a6d3b;
+}
+
 .login__inner, .register__inner, .admin__inner {
     background-color: #e0e0e0;
     padding: 60px;
@@ -72,15 +91,18 @@ body {
     align-items: center;
 }
 
+.login__field {
+    margin-bottom: 5px;
+}
+
+.login__field, .admin__field {
+    padding: 6px 10px;
+}
+
 .title {
     text-align: center;
     margin-bottom: 20px;
     font-size: 24px;
-}
-
-.input-field {
-    margin-bottom: 5px;
-    padding: 6px 10px;
 }
 
 .is-invalid {
@@ -133,6 +155,10 @@ body {
 .admin__form-label {
     display: flex;
     align-items: center;
+}
+
+.admin__search {
+    margin-bottom: 20px;
 }
 
 .admin__search-list {

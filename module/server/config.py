@@ -8,8 +8,13 @@ load_dotenv(os.path.join(BASEDIR, '.env'))
 
 class Config:
     """Parent configuration class."""
-    # WARNING: keep the secret key used in production secret
+    DEBUG = False
+    CSRF_ENABLED = True
+    PERMANENT_SESSION_LIFETIME = 600  # default meaning for permanent sessions
+
+    # WARNING: keep these keys used in production secret
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev'
+    WTF_CSRF_SECRET_KEY = os.environ.get('WTF_CSRF_SECRET_KEY') or 'dev'
 
     # Database
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \

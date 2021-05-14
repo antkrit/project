@@ -10,27 +10,27 @@
             <form method="POST" class="register__form" novalidate>
                 {{ form.hidden_tag() }}
                 <label>
-                    {{ render_field(form.username) }}
+                    {{ render_field(form.username, "admin__field") }}
                 </label>
                 <label>
-                    {{ render_field(form.email) }}
+                    {{ render_field(form.email, "admin__field") }}
                 </label>
                 <label>
-                    {{ render_field(form.password) }}
+                    {{ render_field(form.password, "admin__field") }}
                 </label>
                 <label>
-                    {{ render_field(form.repeat_password) }}
+                    {{ render_field(form.repeat_password, "admin__field") }}
                 </label>
                 <label>
-                    {{ render_field(form.phone) }}
+                    {{ render_field(form.phone, "admin__field") }}
                 </label>
                 <label>
-                    {{ render_field(form.name) }}
+                    {{ render_field(form.name, "admin__field") }}
                 </label>
                 <label>
-                    {{ render_field(form.address) }}
+                    {{ render_field(form.address, "admin__field") }}
                 </label>
-                {{ render_field(form.tariff_select) }}
+                {{ render_field(form.tariff_select, "admin__field") }}
                 {{ render_button(form.submit) }}
             </form>
         </div>

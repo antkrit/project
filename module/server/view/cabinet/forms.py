@@ -14,6 +14,5 @@ class PaymentCardForm(FlaskForm):
     code = StringField(
         'Code',
         validators=[DataRequired(), Length(1, 64)],
-        render_kw={'class': 'input-field'}
     )
-    submit = SubmitField('Enter', render_kw={'class': 'btn'})
+    submit = SubmitField('Enter')

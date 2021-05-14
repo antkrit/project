@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% from "jinja_helpers.html" import render_field %}
+{% from "jinja_helpers.html" import render_button %}
 
 {% block content %}
 <div class="username">
@@ -25,7 +27,11 @@
                             </div>
                             <div class="info__right">
                                 {% for info in user_info %}
-                                    <small>{{ info }}</small>
+                                    {% if info or info == 0 %}
+                                        <small>{{ info }}</small>
+                                    {% else %}
+                                        <small>{{ "none" }}</small>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>
@@ -35,8 +41,8 @@
                             <form action="" class="payment__form" method="post">
                                 {{ form.hidden_tag() }}
                                 <label for="name">Serial number</label>
-                                <div id="name">{{ form.code() }}</div>
-                                <p>{{ form.submit() }}</p>
+                                <div id="name">{{ render_field(form.code, "login__field") }}</div>
+                                <p>{{ render_button(form.submit) }}</p>
                             </form>
                         </div>
                     </div>
@@ -46,7 +52,7 @@
                                 <h3 class="history__title">Date</h3>
                                 <ul class="history__list">
                                     {% for history in user_history |reverse %}
-                                        <li>{{ history.used_at }}</li>
+                                        <li>{{ moment(history.used_at).format('LLL') }}</li>
                                     {% endfor %}
                                 </ul>
                             </div>

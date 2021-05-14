@@ -1,13 +1,15 @@
-{% macro render_field(field) %}
+{% macro render_field(field, field_class) %}
     {% if field.errors %}
-        {{ field(class="input-field is-invalid") }}
-        <div class="invalid-feedback">
-            {% for error in field.errors %}
-                <small>{{ error }}</small>
-            {% endfor %}
+        <div>
+            {{ field(class=field_class+" is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in field.errors %}
+                    <small>{{ error }}</small>
+                {% endfor %}
+            </div>
         </div>
     {% else %}
-        {{ field(class="input-field") }}
+        {{ field(class=field_class) }}
     {% endif %}
 {% endmacro %}
 

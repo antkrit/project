@@ -1,5 +1,5 @@
 """Define the route of the login form"""
-from flask import render_template, redirect, url_for, request, current_app
+from flask import render_template, redirect, url_for, request, current_app, session, flash
 from flask_login import current_user, login_user, logout_user
 
 from module.server.models.user import User
@@ -29,7 +29,9 @@ def login_view():
 
             user = User.query.filter_by(username=username).first()
             if user and user.check_password(password):  # If such login exists, login and password match
+                session.clear()
                 login_user(user)
+                flash("Successfully logged in.", "info")
 
                 if user.username == 'admin':  # If user is admin
                     return redirect(url_for('admin.admin_view'))

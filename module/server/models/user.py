@@ -3,7 +3,7 @@ from enum import Enum
 from uuid import uuid4
 from random import randint
 from datetime import datetime, timezone
-from flask import current_app
+from flask import flash
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -32,9 +32,10 @@ class State(Enum):
 class User(UserMixin, db.Model):
     """User table"""
     id = db.Column(db.Integer, primary_key=True)
+    uuid = db.Column(db.String, index=True, unique=True)
     name = db.Column(db.String(64))
+    email = db.Column(db.String(120))
     phone = db.Column(db.String(64), index=True, unique=True)
-    email = db.Column(db.String(120), index=True, unique=True)
     username = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     tariff = db.Column(db.String(32))
@@ -95,6 +96,9 @@ class User(UserMixin, db.Model):
             db.session.add(used)
             db.session.delete(card)
             db.session.commit()
+            flash("Your balance has been replenished.", "info")
+        else:
+            flash("Wrong code.", "warning")
 
     def get_history(self):
         """Returns payments history (10 rows)"""
@@ -119,6 +123,7 @@ class User(UserMixin, db.Model):
     def set_ip(self, test_ip=None):
         """
         Generates and set random ip.
+        :param test_ip: ip address that can be entered manually.
         """
         rand_ip = '.'.join([str(randint(0, 255)) for _ in range(4)]) if not test_ip else test_ip
         if not db.session.query(User).filter_by(ip=rand_ip).first() and not test_ip:
