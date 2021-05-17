@@ -1,8 +1,6 @@
 """Setup fixtures and common functions"""
 import pytest
-
-from uuid import uuid4
-from flask import template_rendered
+from flask import template_rendered, url_for
 from contextlib import contextmanager
 from module import App
 from module.server.models.user import User
@@ -43,34 +41,35 @@ def init_app():
     app_context.push()
     db.create_all()
 
-    adm_usr = User(username='admin')
-    adm_usr.set_password('test')
+    adm_usr = User(username='admin', password='test')
     db.session.add(adm_usr)
 
-    usr = User(username='john')
-    usr.set_password('test')
+    to_test_del = User(username='test_del', password='test')
+    db.session.add(to_test_del)
+
+    usr = User(username='john', password='test')
     db.session.add(usr)
 
+    usr1 = User(username='andre', password='test')
+    db.session.add(usr1)
+
     for i in range(2):
-        rand_uuid = str(uuid4())
         card = Card(
-            uuid=rand_uuid,
             amount=200,
             code=str(i).rjust(6, '0')
         )
         db.session.add(card)
 
     for i in range(2, 4):
-        rand_uuid = str(uuid4())
         card = Card(
-            uuid=rand_uuid,
             amount=400,
             code=str(i).rjust(6, '0')
         )
         db.session.add(card)
 
     db.session.commit()
-    yield app
+    with app.app_context(), app.test_request_context():
+        yield app
 
     # Teardown
     db.session.remove()
@@ -101,16 +100,14 @@ def setup_database():
 @pytest.fixture
 def dataset(setup_database):
     """
-    Populate database.
+    Populate in-memory database.
     :param setup_database: pytest fixture
     """
     db = setup_database
 
     # Creates users
-    john = User(username='john')
-    john.set_password('test')
-    andre = User(username='andre')
-    andre.set_password('test')
+    john = User(username='john', password='test')
+    andre = User(username='andre', password='test')
     db.session.add(john)
     db.session.add(andre)
     db.session.commit()
@@ -137,3 +134,17 @@ def logout_user(client):
     :param client: test client of the flask application
     """
     return client.get('/logout', follow_redirects=True)
+
+
+def get_access_token(client, data):
+    """
+    Returns access_token if login and password from the request match
+    :param client: test client of the flask application
+    :param data: data to be sent in the request(login, password)
+    """
+    response_get_login_route_admin = client.get(
+        url_for('api_auth'),
+        headers={'Content-Type': 'application/json'},
+        data=data
+    )
+    return response_get_login_route_admin.json.get('access_token')

@@ -2,6 +2,7 @@
 from uuid import uuid4
 from flask import render_template, redirect, url_for, request, session, current_app, flash
 from flask_login import login_required, current_user
+from module.server import messages
 from module.server.view.admin import bp
 from module.server.view.admin.forms import SearchUserForm, InteractButtonsForm, RegisterForm
 from module.server.models.user import User, Tariffs, State
@@ -33,12 +34,15 @@ def admin_view():
         elif data.get('activate_button'):  # if activate button was pressed
             user = User.query.filter_by(username=session.get('_username_search_form')).first()
             user.change_state()
+            flash(messages['activate_state_success'], "info")
         elif data.get('deactivate_button'):  # if deactivate button was pressed
             user = User.query.filter_by(username=session.get('_username_search_form')).first()
             user.change_state(deactivate=True)
+            flash(messages['deactivate_state_success'], "info")
         elif data.get('delete_button'):  # if delete button was pressed
             user = User.query.filter_by(username=session.get('_username_search_form')).first()
             user.delete_from_db()
+            flash(messages['success'], "info")
 
     # Data for the table with main info
     data_general_table = dict(
@@ -78,24 +82,23 @@ def register_view():
         data = request.form
         if register_form.validate_on_submit() or (data and current_app.testing):
             new_user = User(
-                uuid=str(uuid4()),
                 name=data.get('name'),
                 phone=data.get('phone'),
                 email=data.get('email'),
                 username=data.get('username'),
+                password=data.get('password'),
                 tariff=data.get('tariff_select'),
                 address=data.get('address'),
                 state=State.activated_state.value
             )
-            new_user.set_password(data.get('password'))
-            new_user.set_ip()
+
             try:
                 new_user.save_to_db()
-                flash("Successfully registered", "info")
+                flash(messages['success_register'], "info")
                 return redirect(url_for('admin.admin_view'))
             except ValueError as e:  # error saving to the database
                 current_app.logger.info("Error while saving new user to the database - {0}".format(e))
-                flash("Unable to register this user (Probably, some fields are already in the database)", "warning")
+                flash(messages['failure'], "warning")
                 return redirect(url_for('admin.register_view'))
 
     return render_template(

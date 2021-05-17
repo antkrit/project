@@ -1,6 +1,5 @@
 """Common commands for the manager"""
 import pytest
-from uuid import uuid4
 from flask_script import Command, Manager
 from module import App
 from module.server.models.user import User, Tariffs, State
@@ -31,8 +30,10 @@ def admin(password='test'):
         # If the first row in the table doesn't exist
         # Creates account with login "admin" and password "test"(both fields may be changed)
         try:
-            admin = User(username='admin')
-            admin.set_password(password)
+            admin = User(
+                username='admin',
+                password=password
+            )
             admin.save_to_db()
             print("Successfully created.\nLogin: {0}\nPassword: {1}".format('admin', password))
         except Exception as e:
@@ -50,9 +51,7 @@ def cards(num_test_cards=10):
 
     # Creates cards with amount 200
     for i in range(num_200_test_cards):
-        rand_uuid = str(uuid4())
         card = Card(
-            uuid=rand_uuid,
             amount=200,
             code=str(i).rjust(6, '0')
         )
@@ -60,9 +59,7 @@ def cards(num_test_cards=10):
 
     # Creates cards with amount 400
     for i in range(num_200_test_cards, num_200_test_cards + num_400_test_cards):
-        rand_uuid = str(uuid4())
         card = Card(
-            uuid=rand_uuid,
             amount=400,
             code=str(i).rjust(6, '0')
         )

@@ -3,7 +3,7 @@ from json import load
 from setuptools import setup, find_packages
 
 # Load module info
-with open((os.path.join(os.path.dirname(__file__), 'pkg_info.json'))) as info:
+with open((os.path.join(os.path.dirname(__file__), 'server', 'static', 'pkg_info.json'))) as info:
     _info = load(info)
 
 setup(

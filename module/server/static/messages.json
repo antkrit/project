@@ -1,0 +1,12 @@
+{
+  "access_denied": "Access is denied.",
+  "activate_state_success": "Activated succesfully.",
+  "card_success_code": "Your balance has been replenished.",
+  "card_wrong_code": "Wrong code.",
+  "deactivate_state_success": "Deactivated succesfully.",
+  "failure": "Failure.",
+  "success": "Successfull.",
+  "success_login": "Successfully logged in.",
+  "success_register": "Succesfully registered.",
+  "user_not_found": "User not found."
+}

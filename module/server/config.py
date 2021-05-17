@@ -1,24 +1,30 @@
 """File with different 'config' objects for the flask app"""
 import os
+from datetime import timedelta
 from dotenv import load_dotenv
 
+
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
-load_dotenv(os.path.join(BASEDIR, '.env'))
+load_dotenv(os.path.join(BASEDIR, 'static', '.env'))
 
 
 class Config:
-    """Parent configuration class."""
-    DEBUG = False
+    """Parent configuration class"""
     CSRF_ENABLED = True
-    PERMANENT_SESSION_LIFETIME = 600  # default meaning for permanent sessions
+    PROPAGATE_EXCEPTIONS = True
+
+    PERMANENT_SESSION_LIFETIME = timedelta(minutes=10)  # default meaning for permanent sessions
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=30)
 
     # WARNING: keep these keys used in production secret
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev'
     WTF_CSRF_SECRET_KEY = os.environ.get('WTF_CSRF_SECRET_KEY') or 'dev'
+    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or "dev"
 
     # Database
+    # stores database file "app.db" by the ../module/server/static/ path
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'sqlite:///' + os.path.join(BASEDIR, 'app.db')  # stores database file "app.db" by the ../module/server/ path
+        'sqlite:///' + os.path.join(BASEDIR, 'static', 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Mail
