@@ -9,8 +9,7 @@ pylint==1.9.4; sys_platform==="linux"
 pylint_flask_sqlalchemy==0.2.0
 
 # Testing
-pytest==6.2.3; python_version>"3.5"
-pytest<6.2; python_version=="3.5"
+pytest==6.2.3
 
 # Code coverage
 pytest-cov==2.11.1
