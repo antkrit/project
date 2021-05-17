@@ -1,13 +1,13 @@
 """User database model"""
 from enum import Enum
-from uuid import uuid4
 from random import randint
 from datetime import datetime, timezone
 from flask import flash
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-
 from module import App
+from module.server import messages
+from module.server.models import generate_uuid, Base
 from module.server.models.payment_cards import Card, UsedCard
 
 
@@ -29,10 +29,11 @@ class State(Enum):
     deactivated_state = 'deactivated'
 
 
-class User(UserMixin, db.Model):
+class User(Base, UserMixin, db.Model):
     """User table"""
     id = db.Column(db.Integer, primary_key=True)
-    uuid = db.Column(db.String, index=True, unique=True)
+    uuid = db.Column(db.String, index=True, unique=True, default=generate_uuid)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     name = db.Column(db.String(64))
     email = db.Column(db.String(120))
     phone = db.Column(db.String(64), index=True, unique=True)
@@ -42,9 +43,23 @@ class User(UserMixin, db.Model):
     ip = db.Column(db.String(64))
     address = db.Column(db.String(64))
     state = db.Column(db.String(64), server_default=State.deactivated_state.value)
-    balance = db.Column(db.Float, server_default='0')
+    balance = db.Column(db.Float, default=0)
 
     used_cards = db.relationship('UsedCard', backref='user', lazy='dynamic')
+
+    def __init__(self, username, password, name=None, email=None, phone=None, tariff=None,
+                 address=None, state=None, uuid=None):
+        """Init user object"""
+        self.uuid = uuid
+        self.username = username
+        self.set_password(password)
+        self.name = name
+        self.email = email
+        self.phone = phone
+        self.tariff = tariff
+        self.address = address
+        self.state = state
+        self.set_ip()
 
     def get_info(self) -> list:
         """Returns information required for the table in the cabinet"""
@@ -58,24 +73,6 @@ class User(UserMixin, db.Model):
         self.state = State.activated_state.value if not deactivate else State.deactivated_state.value
         db.session.commit()
 
-    def save_to_db(self):
-        """Save user to db"""
-        try:
-            db.session.add(self)
-            db.session.commit()
-        except Exception as e:  # if unable to commit make rollback
-            db.session.rollback()
-            raise ValueError("Unable to save user: {0}".format(e))
-
-    def delete_from_db(self):
-        """Delete user from db"""
-        try:
-            db.session.delete(self)
-            db.session.commit()
-        except Exception as e:  # if unable to commit make rollback
-            db.session.rollback()
-            raise ValueError("Unable to delete user: {0}".format(e))
-
     def use_card(self, card_code: str):
         """
         Add money to the user's balance and makes the card inactive if the card code exists in the database.
@@ -85,7 +82,6 @@ class User(UserMixin, db.Model):
         if card:  # if code is correct
             self.balance += card.amount
             used = UsedCard(
-                uuid=str(uuid4()),
                 amount=card.amount,
                 code=card_code,
                 balance_after_use=self.balance,
@@ -93,12 +89,11 @@ class User(UserMixin, db.Model):
                 user_id=self.id
             )
 
-            db.session.add(used)
-            db.session.delete(card)
-            db.session.commit()
-            flash("Your balance has been replenished.", "info")
+            used.save_to_db()
+            card.delete_from_db()
+            flash(messages['card_success_code'], "info")
         else:
-            flash("Wrong code.", "warning")
+            flash(messages['card_wrong_code'], "warning")
 
     def get_history(self):
         """Returns payments history (10 rows)"""
@@ -133,6 +128,14 @@ class User(UserMixin, db.Model):
             return
 
         self.set_ip()  # otherwise run this function again
+
+    @classmethod
+    def get_user_by_username(cls, username):
+        """
+        Get user from database by it's username
+        :param username: username of the user
+        """
+        return db.session.query(cls).filter_by(username=username).first()
 
     def __repr__(self) -> str:
         """Returns representative string that displays the username of the user"""

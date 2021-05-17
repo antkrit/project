@@ -2,6 +2,7 @@
 from flask import render_template, redirect, url_for, request, current_app, session, flash
 from flask_login import current_user, login_user, logout_user
 
+from module.server import messages
 from module.server.models.user import User
 from module.server.view.login import bp, forms as f
 
@@ -31,7 +32,7 @@ def login_view():
             if user and user.check_password(password):  # If such login exists, login and password match
                 session.clear()
                 login_user(user)
-                flash("Successfully logged in.", "info")
+                flash(messages["success_login"], "info")
 
                 if user.username == 'admin':  # If user is admin
                     return redirect(url_for('admin.admin_view'))
