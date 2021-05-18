@@ -1,6 +1,6 @@
 [coverage:run]
 source = app
-omit = *client*, *tests*, *migrations*, *commands*, *__init__.py, *setup.py, *manage.py, *app.py, *config.py
+omit = *client*, *tests*, *migrations*, *commands*, *__init__.py, *setup.py, *manage.py, *app.py, *run.py, *config.py
 
 [coverage:report]
 fail_under = 90

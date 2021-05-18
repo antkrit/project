@@ -10,14 +10,14 @@ env:
 
 # install dependencies
 before_install:
-  - python -m pip install --upgrade pip
+  - python3 -m pip install --upgrade pip
 install:
-  - python -m pip install -r requirements/dev.txt
+  - python3 -m pip install -r requirements/dev.txt
 
 before_script:
   - flask db upgrade
 script:
-  - pip install -e module
+  - python3 -m pip install -e module
   - pytest --cov=module --cov-config=module/.coveragerc
 after_success:
   - coveralls

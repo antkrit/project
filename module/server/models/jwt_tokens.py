@@ -1,4 +1,4 @@
-"""Models for store jwt tokensr"""
+"""Models for store jwt tokens"""
 from datetime import datetime
 from module import App
 from module.server.models import Base
@@ -17,8 +17,8 @@ class TokenBlocklist(Base, db.Model):
 
 
 @App.jwt.token_in_blocklist_loader
-def check_if_token_in_blocklist(jwt_handler, jwt_payload):
-    """Returns true if token in blocklist"""
+def check_if_token_in_blocklist(jwt_handler, jwt_payload) -> bool:
+    """Callback function to check if a JWT exists in the blocklist"""
     jti = jwt_payload["jti"]
     token = App.db.session.query(TokenBlocklist.id).filter_by(jti=jti).scalar()
     return token is not None

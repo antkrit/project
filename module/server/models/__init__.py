@@ -7,15 +7,19 @@ class Base:
     """Class with base methods"""
 
     @classmethod
-    def get_by_uuid(cls, uuid: str):
+    def get_by_uuid(cls, uuid):
         """
         Returns object by it's uuid if any, otherwise None
-        :param uuid: uuid of the card
+        :param uuid: uuid of the object
+        :type uuid: str
         """
         return cls.query.filter_by(uuid=uuid).first()
 
     def save_to_db(self):
-        """Save object to db"""
+        """
+        Save object to db
+        :raises ValueError: the object cannot be saved in the database
+        """
         try:
             App.db.session.add(self)
             App.db.session.commit()
@@ -24,7 +28,10 @@ class Base:
             raise ValueError("Unable to save user: {0}".format(e))
 
     def delete_from_db(self):
-        """Delete object from db"""
+        """
+        Delete object from db
+        :raises ValueError: the object cannot be deleted from the database
+        """
         try:
             App.db.session.delete(self)
             App.db.session.commit()
@@ -34,5 +41,5 @@ class Base:
 
 
 def generate_uuid():
-    """Returns uuid with type string"""
+    """Returns random uuid with type 'string'"""
     return str(uuid4())

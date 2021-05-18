@@ -4,7 +4,7 @@ from datetime import timedelta
 from dotenv import load_dotenv
 
 
-BASEDIR = os.path.abspath(os.path.dirname(__file__))
+BASEDIR = os.path.abspath(os.path.dirname(__file__))  # ../module/server
 load_dotenv(os.path.join(BASEDIR, 'static', '.env'))
 
 
@@ -13,7 +13,7 @@ class Config:
     CSRF_ENABLED = True
     PROPAGATE_EXCEPTIONS = True
 
-    PERMANENT_SESSION_LIFETIME = timedelta(minutes=10)  # default meaning for permanent sessions
+    PERMANENT_SESSION_LIFETIME = timedelta(minutes=10)
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=30)
 
     # WARNING: keep these keys used in production secret

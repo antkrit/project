@@ -1,7 +1,7 @@
 """
 Init blueprint for the login view.
 Routes:
-    {website_url}/ - login form
+    / - login form
 """
 from flask import Blueprint
 

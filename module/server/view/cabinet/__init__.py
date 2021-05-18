@@ -1,7 +1,7 @@
 """
 Init blueprint for the cabinet view.
 Routes:
-    {website_url}/cabinet - cabinet of the user
+    /cabinet - cabinet of the user
 """
 from flask import Blueprint
 

@@ -63,7 +63,7 @@ class UserAuthResource(Resource):
 
     def get(self):
         """
-        Creates an access_token and refresh_token for the user
+        Creates access_token and refresh_token for the user
         if user exists and login, password from the request match.
         """
         data = LoginSchema().load(request.get_json())
@@ -73,7 +73,7 @@ class UserAuthResource(Resource):
 
         user = User.get_user_by_username(login)
 
-        if user and user.check_password(password):
+        if user and user.check_password(password):  # if login and password from the request match - return access_token
             access_token = create_access_token(identity=user.uuid, fresh=True)
             refresh_token = create_refresh_token(user.uuid)
             decoded = decode_token(access_token)
@@ -83,6 +83,7 @@ class UserAuthResource(Resource):
                 'fresh': decoded['fresh'],
                 'expires_in': decoded['exp']
             }, 200
+        # if user doesn't exist or login and password don't match - return 401
         return {'message': 'Unable to login.'}, 401
 
     @jwt_required()
@@ -111,7 +112,6 @@ class LogoutUser(Resource):
     post:
         summary: Creates access and refresh tokens
         parameters:
-            - in: query
             path: /api/v1/logout
         responses:
             '200':
@@ -179,6 +179,7 @@ class UserResource(Resource):
         """Returns info about user"""
         curr_user = User.get_by_uuid(get_jwt_identity())
         if curr_user.username != 'admin' and curr_user.uuid != uuid:
+            # if current user is not admin or account owner return 403
             return {'message': messages['access_denied']}, 403
 
         user_schema = AdminUserInfoSchema() if curr_user.username == 'admin' else FullUserInfoSchema()
@@ -186,20 +187,21 @@ class UserResource(Resource):
         user = User.get_by_uuid(uuid)
         if user:
             return user_schema.dump(user), 200
-        return {'message': messages['user_not_found']}, 404
+        return {'message': messages['user_not_found']}, 404  # if uuid is wrong return 404
 
     @jwt_required()
     def post(self, uuid: str):
         """Use card"""
         curr_user = User.get_by_uuid(get_jwt_identity())
-        if curr_user.uuid != uuid:
+        if curr_user.uuid != uuid:  # if current user is not account owner return 403
             return {'message': messages['access_denied']}, 403
 
         data = InputCardSchema().load(request.get_json())
-        if Card.get_card_by_code(data['code']):
+
+        if Card.get_card_by_code(data['code']):  # if card code is correct - replenish user account
             curr_user.use_card(data['code'])
             return {'message': messages['card_success_code']}, 200
-        return {'message': messages['card_wrong_code']}, 404
+        return {'message': messages['card_wrong_code']}, 404  # if card code is wrong return 404
 
 
 class UserHistoryResource(Resource):
@@ -214,17 +216,21 @@ class UserHistoryResource(Resource):
                 description: user payment history was returned
                 content:
                     application/json
+            '404':
+                description: wrong uuid
+                content:
+                    application/json
     """
     @jwt_required()
     def get(self, uuid: str):
-        """Returns user payment history"""
+        """Returns user payment history(This route is not protected: each user can see the story of another)"""
         curr_user = User.get_by_uuid(uuid)
         used_cards_schema = UsedCardSchema(many=True)
 
-        if curr_user:
+        if curr_user:  # if uuid is correct return history
             history = curr_user.get_history()
             return used_cards_schema.dump(history), 200
-        return {'message': messages['user_not_found']}, 404
+        return {'message': messages['user_not_found']}, 404  # otherwise return 404
 
 
 class UsersResource(Resource):
@@ -244,11 +250,11 @@ class UsersResource(Resource):
     def get(self):
         """Returns list of users if current user is admin, else user's account info"""
         curr_user = User.get_by_uuid(get_jwt_identity())
-        if curr_user.username == 'admin':
+        if curr_user.username == 'admin':  # if current user is admin show common user information(AdminUserInfoSchema)
             users_schema = AdminUserInfoSchema(many=True)
             all_users = User.query.all()
             return users_schema.dump(all_users), 200
-        else:
+        else:  # if current user is account owner show full user information(FullUserInfoSchema)
             user_schema = FullUserInfoSchema()
             user = curr_user
             return user_schema.dump(user), 200

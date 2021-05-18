@@ -29,12 +29,12 @@ def login_view():
             password = data.get('password')
 
             user = User.query.filter_by(username=username).first()
-            if user and user.check_password(password):  # If such login exists, login and password match
+            if user and user.check_password(password):  # If such login exists, login and password match - login user
                 session.clear()
                 login_user(user)
                 flash(messages["success_login"], "info")
 
-                if user.username == 'admin':  # If user is admin
+                if user.username == 'admin':  # If user is admin - redirect him to the admin interface
                     return redirect(url_for('admin.admin_view'))
                 return redirect(url_for('cabinet.cabinet_view'))
             return redirect(url_for('login.login_view'))

@@ -13,7 +13,7 @@ class AdminToolsResource(Resource):
     summary: work with user account. Available choices: ['activate', 'deactivate', 'delete']
     parameters:
         path: /api/v1/auth
-        schema: RegisterSchema
+        schema: AdminChoiceSchema
     responses:
         '200':
             description: everything is okay
@@ -37,7 +37,7 @@ class AdminToolsResource(Resource):
     def post(self, uuid):
         """Work with user account"""
         curr_user = User.get_by_uuid(get_jwt_identity())
-        if curr_user.username != 'admin':
+        if curr_user.username != 'admin':  # if current is not admin
             return {'message': messages['access_denied']}, 403
 
         data = AdminChoiceSchema().load(request.get_json())
@@ -51,6 +51,7 @@ class AdminToolsResource(Resource):
             return {'message': messages['deactivate_state_success']}, 200
         elif data['choice'] == 'delete':
             try:
+                # if everything is okay - user will be deleted from the database
                 user_to_work.delete_from_db()
                 return {'message': messages['success']}, 200
             except Exception as e:
