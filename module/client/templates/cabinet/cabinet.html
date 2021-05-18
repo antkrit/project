@@ -51,7 +51,7 @@
                             <div class="history__block">
                                 <h3 class="history__title">Date</h3>
                                 <ul class="history__list">
-                                    {% for history in user_history |reverse %}
+                                    {% for history in user_history%}
                                         <li>{{ moment(history.used_at).format('LLL') }}</li>
                                     {% endfor %}
                                 </ul>
@@ -59,7 +59,7 @@
                             <div class="history__block">
                                 <h3 class="history__title">Sum</h3>
                                 <ul class="history__list">
-                                    {% for history in user_history |reverse %}
+                                    {% for history in user_history %}
                                         <li>{{ history.amount }}</li>
                                     {% endfor %}
                                 </ul>
@@ -67,7 +67,7 @@
                             <div class="history__block">
                                 <h3 class="history__title">Balance</h3>
                                 <ul class="history__list">
-                                    {% for history in user_history |reverse %}
+                                    {% for history in user_history %}
                                         <li>{{ history.balance_after_use }}</li>
                                     {% endfor %}
                                 </ul>

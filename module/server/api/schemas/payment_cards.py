@@ -8,7 +8,7 @@ ma = App.ma
 
 
 class CardSchema(ma.SQLAlchemyAutoSchema):
-    """Schema for the payment card"""
+    """Schema for payment card"""
 
     class Meta:
         model = Card

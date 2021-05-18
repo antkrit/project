@@ -9,7 +9,7 @@ ma = App.ma
 
 
 class AdminUserInfoSchema(ma.SQLAlchemyAutoSchema):
-    """Schema for the user"""
+    """Schema for full admin info"""
 
     class Meta:
         model = User
@@ -30,7 +30,7 @@ class AdminUserInfoSchema(ma.SQLAlchemyAutoSchema):
 
 
 class FullUserInfoSchema(ma.SQLAlchemyAutoSchema):
-    """Schema for the user"""
+    """Schema for full user info"""
 
     class Meta:
         model = User

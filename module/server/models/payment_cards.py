@@ -15,10 +15,11 @@ class Card(Base, db.Model):
     code = db.Column(db.String(64), nullable=False, index=True, unique=True, server_default='000000')
 
     @classmethod
-    def get_card_by_code(cls, code: str):
+    def get_card_by_code(cls, code) -> "Card":
         """
         Returns card by it's code if any, otherwise None
         :param code: code of the card
+        :type code: str
         """
         return cls.query.filter_by(code=code).first()
 
@@ -39,13 +40,14 @@ class UsedCard(Base, db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     @classmethod
-    def get_card_by_code(cls, code: str):
+    def get_card_by_code(cls, code) -> "UsedCard":
         """
         Returns card by it's code if any, otherwise None
         :param code: code of the card
+        :type code: str
         """
         return cls.query.filter_by(code=code).first()
 
     def __repr__(self) -> str:
-        """Returns representative string that displays code and amount of the card"""
+        """Returns representative string that displays code, amount of the card, when and by whom it was used"""
         return 'Card {0}: used by {1} at {2}. Code: {3}'.format(self.uuid, self.user_id, self.used_at, self.code)

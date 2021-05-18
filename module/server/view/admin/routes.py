@@ -14,8 +14,10 @@ from module.server.models.payment_cards import Card
 def admin_view():
     """
     View for the admin page.
-    Access only for user with nickname 'admin'.
-    If the user tries to enter this route without logging in, he will be automatically redirected to the cabinet page.
+    Access only for admin.
+    If the user tries to enter this route without logging in, he will be automatically redirected to the login page.
+    If the user tries to enter this route without permission(user is not admin),
+    he will be automatically redirected to the cabinet page.
     Methods: GET, POST
     """
     if current_user.username != 'admin':  # If current user is not admin redirect him to the cabinet
@@ -67,8 +69,10 @@ def admin_view():
 def register_view():
     """
     New user registration view.
-    Access only for user with nickname 'admin'.
-    If the user tries to enter this route without logging in, he will be automatically redirected to the cabinet page.
+    Access only for admin.
+    If the user tries to enter this route without logging in, he will be automatically redirected to the login page.
+    If the user tries to enter this route without permission(user is not admin),
+    he will be automatically redirected to the cabinet page.
     Methods: GET, POST
     """
     if current_user.username != 'admin':  # If current user is not admin redirect him to the cabinet
@@ -81,6 +85,8 @@ def register_view():
     if request.method == 'POST':
         data = request.form
         if register_form.validate_on_submit() or (data and current_app.testing):
+            # if admin click the 'Register' button or there is data in the request while testing app
+            # Create new user
             new_user = User(
                 name=data.get('name'),
                 phone=data.get('phone'),
@@ -93,10 +99,14 @@ def register_view():
             )
 
             try:
+                # if everything is okay - admin will be redirected to the admin page
+                # and user will be created
                 new_user.save_to_db()
                 flash(messages['success_register'], "info")
                 return redirect(url_for('admin.admin_view'))
             except ValueError as e:  # error saving to the database
+                # otherwise admin will be redirected to the register page
+                # the user will not be created
                 current_app.logger.info("Error while saving new user to the database - {0}".format(e))
                 flash(messages['failure'], "warning")
                 return redirect(url_for('admin.register_view'))

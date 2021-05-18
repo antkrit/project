@@ -7,7 +7,6 @@ from wtforms.validators import DataRequired, Length
 class LoginForm(FlaskForm):
     """
     User login form.
-
     Fields: username - login of the user, password - password of the user
     Buttons: submit - sends data from fields to the server for processing
     """
