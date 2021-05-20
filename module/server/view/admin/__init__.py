@@ -2,7 +2,7 @@
 Init blueprint for the admin view.
 Routes:
     /admin/ - admin cabinet
-    /admin/register - register view
+    /admin/register - register form
 """
 from flask import Blueprint
 

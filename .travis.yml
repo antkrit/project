@@ -18,6 +18,6 @@ before_script:
   - flask db upgrade
 script:
   - python3 -m pip install -e module
-  - pytest --cov=module --cov-config=module/.coveragerc
+  - pytest --cov
 after_success:
   - coveralls

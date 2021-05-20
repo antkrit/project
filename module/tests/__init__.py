@@ -1,4 +1,5 @@
 """Setup fixtures and common functions"""
+import json
 import pytest
 from flask import template_rendered, url_for
 from contextlib import contextmanager
