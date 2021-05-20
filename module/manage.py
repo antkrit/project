@@ -1,5 +1,5 @@
 """Adds CLI commands to the manager"""
-import makepath
+from module import makepath
 from flask_script import Manager, Shell
 from module.app import app
 from module.commands.common import PytestCommand, make_context_, populate_manager

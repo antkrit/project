@@ -17,7 +17,7 @@ install:
 before_script:
   - flask db upgrade
 script:
-  - python3 -m pip install -e module
+  - python3 -m pip install -e .
   - pytest --cov
 after_success:
   - coveralls

@@ -8,6 +8,7 @@ Flask-WTF==0.14.3
 Flask-Moment==0.11.0
 Flask-Marshmallow==0.14.0
 Flask-JWT-Extended==4.2.1
+Flask-Restful==0.3.9
 Flask-Script==2.0.6
 
 # Additional
