@@ -14,7 +14,11 @@ os.chdir(this_files_dir)
 if __name__ == '__main__':
     if platform == 'win32':
         from waitress import serve
-        serve(app, host='127.0.0.1', port=8001)  # http://127.0.0.1:8001
+
+        host, port = '127.0.0.1', 8001
+
+        print("Application startup on http://{0}:{1}".format(host, port))
+        serve(app, host=host, port=port)  # http://127.0.0.1:8001
     elif platform != 'win32':
         import multiprocessing
         from gunicorn.app.base import BaseApplication

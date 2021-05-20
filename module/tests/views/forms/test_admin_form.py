@@ -1,9 +1,11 @@
+"""Test forms from admin view"""
 from wtforms.validators import ValidationError
 from module.tests import init_app
 from module.server.view.admin.forms import RegisterForm
 
 
 def test_validation(init_app):
+    """Checks whether field data can be validated correctly"""
     app = init_app
 
     with app.test_request_context():

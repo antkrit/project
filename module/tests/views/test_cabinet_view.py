@@ -59,4 +59,3 @@ def test_payment_card_form(init_app):
         response_use_card = client.post('/cabinet', data=dict(code='000001'), follow_redirects=True)
         assert response_use_card.status_code == 200
         assert current_user.balance == prev_user_balance
-

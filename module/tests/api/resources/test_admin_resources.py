@@ -24,16 +24,10 @@ def test_admin_tools_resource(init_app):
             "password": "test"
         })
 
-        response_login_john = client.get(
-            url_for('api_auth'),
-            headers={"Content-Type": "application/json"},
-            data=login_payload_john
-        )
-        assert response_login_john.status_code == 200
-
+        access_token_john = get_access_token(client, login_payload_john)
         response_get_route_not_admin_auth = client.post(
             url_for('api_admin_tools', uuid=user.uuid),
-            headers={'Authorization': 'Bearer {0}'.format(response_login_john.json.get('access_token'))},
+            headers={'Authorization': 'Bearer {0}'.format(access_token_john)},
         )
         assert response_get_route_not_admin_auth.status_code == 403
         access_token_admin = get_access_token(client, login_payload_admin)

@@ -10,8 +10,8 @@ class PytestCommand(Command):
     """Runs tests"""
     capture_all_args = True  # arguments
 
-    def __call__(self, app=None, *args):
-        pytest.main(*args)
+    def __call__(self, app=None, *args, **kwargs):
+        pytest.main(*args, **kwargs)
 
 
 def make_context_() -> dict:
@@ -23,7 +23,7 @@ populate_manager = Manager(usage="Populate database with test data")
 
 
 @populate_manager.command
-def admin(password='test') -> None:
+def admin(password='test'):
     """
     Creates an admin account if one doesn't exist
     :param password: password for the admin account. In the command line interface,
@@ -52,7 +52,7 @@ def admin(password='test') -> None:
 
 
 @populate_manager.command
-def cards(num_test_cards=10) -> None:
+def cards(num_test_cards=10):
     """
     Creates and saves to database test payment cards
     :param num_test_cards: number of test payment cards with codes 00000i, where i in range(0, num_test_cards)

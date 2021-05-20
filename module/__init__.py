@@ -158,7 +158,6 @@ class App:
 
         if name == '__main__':
             # Run the application if file was started directly ($ python name.py)
-            self._app.logger.info('Website startup')
             self._app.run(debug=True)
 
 

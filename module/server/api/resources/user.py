@@ -1,4 +1,5 @@
 """Resource to work with user"""
+import json
 from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import (
@@ -285,4 +286,3 @@ class TokenRefresh(Resource):
             'fresh': decoded['fresh'],
             'expires_in': decoded['exp']
         }, 200
-

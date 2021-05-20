@@ -23,9 +23,9 @@ class Base:
         try:
             App.db.session.add(self)
             App.db.session.commit()
-        except Exception as e:  # if unable to commit make rollback
+        except Exception as save_err:  # if unable to commit make rollback
             App.db.session.rollback()
-            raise ValueError("Unable to save user: {0}".format(e))
+            raise ValueError("Unable to save user: {0}".format(save_err)) from save_err
 
     def delete_from_db(self):
         """
@@ -35,9 +35,9 @@ class Base:
         try:
             App.db.session.delete(self)
             App.db.session.commit()
-        except Exception as e:  # if unable to commit make rollback
+        except Exception as del_err:  # if unable to commit make rollback
             App.db.session.rollback()
-            raise ValueError("Unable to delete user: {0}".format(e))
+            raise ValueError("Unable to delete user: {0}".format(del_err)) from del_err
 
 
 def generate_uuid():
