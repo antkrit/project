@@ -86,6 +86,7 @@ class App:
         """
         Registers blueprints required for the application routes to work.
         To register a new blueprint, just pass it to arguments along with the others.
+
         :param '*args': the variable arguments are used to get a list of blueprints.
         """
         for bp in args:
@@ -94,9 +95,23 @@ class App:
             except Exception as e:
                 self._app.logger.error("An error occurred while registration blueprint - {}".format(e))
 
+    def register_cli_commands(self, *args) -> None:
+        """
+        Registers cli commands required for the cli commands to work.
+        To register a new cli command, just pass it to arguments along with the others.
+
+        :param '*args': the variable arguments are used to get a list of cli commands.
+        """
+        for command in args:
+            try:
+                self._app.cli.add_command(command)
+            except Exception as e:
+                self._app.logger.error("An error occurred while registration cli commands - {}".format(e))
+
     def setup_logging_error_handling(self, logs_folder=None, log_level=logging.DEBUG) -> None:
         """
         Configures the app logs and error handling systems.
+
         :param logs_folder: folder where log files will be stored. If None the route will be taken
             from the variable 'self.logs_folder', defaults to None
         :type logs_folder: str, optional
@@ -152,6 +167,7 @@ class App:
     def run(self, name) -> None:
         """
         Launches the application in debug mode BUT NOT in testing mode(using global database instead of temporary).
+
         :param name: the name of the file in which this function is called
         :type name: str
         """

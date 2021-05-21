@@ -1,11 +1,11 @@
 """File with different 'config' objects for the flask app"""
 import os
 from datetime import timedelta
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
 
 BASEDIR = os.path.abspath(os.path.dirname(__file__))  # ../module/server
-load_dotenv(os.path.join(BASEDIR, 'static', '.env'))
+load_dotenv(find_dotenv(), override=True)
 
 
 class Config:
@@ -17,9 +17,9 @@ class Config:
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=30)
 
     # WARNING: keep these keys used in production secret
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev'
-    WTF_CSRF_SECRET_KEY = os.environ.get('WTF_CSRF_SECRET_KEY') or 'dev'
-    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or "dev"
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'dev')
+    WTF_CSRF_SECRET_KEY = os.environ.get('WTF_CSRF_SECRET_KEY', 'dev')
+    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'dev')
 
     # Database
     # stores database file "app.db" by the ../module/server/static/ path
@@ -29,9 +29,9 @@ class Config:
 
     # Mail
     # By default is configured on the Python SMTP debugging server
-    MAIL_SERVER = os.environ.get('MAIL_SERVER') or 'localhost'
-    MAIL_PORT = int(os.environ.get('MAIL_PORT') or 8025)
-    MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS') or False
+    MAIL_SERVER = os.environ.get('MAIL_SERVER', 'localhost')
+    MAIL_PORT = int(os.environ.get('MAIL_PORT', 8025))
+    MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', False)
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')  # Who'll send emails
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     ADMINS = ['email@example.com']  # Who'll receive emails about failures
@@ -45,3 +45,4 @@ class TestConfig(Config):
 
     # Can be useful if the application needs to determine if it is running in tests or not (access via app.testing).
     TESTING = True
+    DEBUG = True
