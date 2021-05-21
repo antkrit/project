@@ -1,6 +1,6 @@
 [run]
 source = module/server
-omit = *migrations*
+omit = *tests* ,*migrations*
 
 [report]
 fail_under = 100

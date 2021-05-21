@@ -69,7 +69,7 @@ def init_app():
         db.session.add(card)
 
     db.session.commit()
-    with app.app_context(), app.test_request_context():
+    with app.test_request_context():
         yield app
 
     # Teardown
