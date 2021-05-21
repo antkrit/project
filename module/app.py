@@ -1,5 +1,5 @@
 """Main script that creates and runs application"""
-from module import App, makepath
+from module import App
 from module.server.view.login import bp as login_bp
 from module.server.view.cabinet import bp as cabinet_bp
 from module.server.view.admin import bp as admin_bp

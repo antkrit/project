@@ -40,15 +40,18 @@ python -m venv .venv
 
 - **Install dependencies:**
 
-Development requirements (include production requirements)
+*Development requirements (include production requirements)*
 ```bash
 python -m pip install -r requirements.txt
+python -m pip install -e .
 ```
 
-Production requirements
-(if you are only interested in launching the application, these requirements are enough for you)
+*Production requirements
+(if you are only interested in launching the application,
+these requirements are enough for you)*
 ```bash
 python -m pip install -r requirements/prod.txt
+python -m pip install -e .
 ```
 
 - **Prepare database:**
@@ -129,18 +132,12 @@ module/
     |   └── ...
     ├── __init__.py
     ├── app.py
-    ├── makepath.py
     └── run.py
 ```
 
 Run flask application
 ```
 ├── app.py
-```
-
-Add project to sys.path (instead of using `python3 -m pip install -e .`)
-```
-├── makepath.py
 ```
 
 Run wsgi application by waitress(On Windows) or gunicorn(Linux)
