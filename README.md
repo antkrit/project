@@ -2,6 +2,8 @@
 [![Build Status](https://travis-ci.com/antkrit/project.svg?branch=main)](https://travis-ci.com/antkrit/project)
 [![Coverage Status](https://coveralls.io/repos/github/antkrit/project/badge.svg?branch=main)](https://coveralls.io/github/antkrit/project?branch=main)
 [![Updates](https://pyup.io/repos/github/antkrit/project/shield.svg)](https://pyup.io/repos/github/antkrit/project/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Description
 Personal Account - a simple website for ISP users. Users can view their information, payment history or top up their
@@ -140,13 +142,13 @@ Run flask application
 ├── app.py
 ```
 
-Run wsgi application by waitress(On Windows) or gunicorn(Linux)
+Run wsgi application with waitress(On Windows) or gunicorn(Linux)
 ```
 └── run.py
 ```
 
 ### Client
-Use this directory to store `html`,` css` and `js` files and everything related to them:
+Use this directory to store `html`, `css` and `js` files and everything related to them:
 ```
 ├── client
     ├── static/

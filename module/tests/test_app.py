@@ -51,17 +51,17 @@ def test_cli_commands():
 
         # Test 'populate'
 
-        result = cli_runner.invoke(populate_cli, ['admin', '-p', 'test1'])
-        assert 'Successfully created.\nLogin: {0}\nPassword: {1}'.format('admin', 'test1') in result.output
-        adm_user = db.session.query(User).filter_by(username='admin').first()
-        assert adm_user and adm_user.check_password('test1')
+        result = cli_runner.invoke(populate_cli, ["admin", "-p", "test1"])
+        assert "Successfully created.\nLogin: {0}\nPassword: {1}".format("admin", "test1") in result.output
+        adm_user = db.session.query(User).filter_by(username="admin").first()
+        assert adm_user and adm_user.check_password("test1")
 
-        result = cli_runner.invoke(populate_cli, ['admin'])
-        assert 'Already exists.' in result.output
+        result = cli_runner.invoke(populate_cli, ["admin"])
+        assert "Already exists." in result.output
 
-        result = cli_runner.invoke(populate_cli, ['cards', '-n', '15'])
-        assert 'Successfully created. Card codes:' in result.output
+        result = cli_runner.invoke(populate_cli, ["cards", "-n", "15"])
+        assert "Successfully created. Card codes:" in result.output
         assert len(db.session.query(Card).all()) == 15
 
-        result = cli_runner.invoke(populate_cli, ['cards'])
-        assert 'Cards already exists.' in result.output
+        result = cli_runner.invoke(populate_cli, ["cards"])
+        assert "Cards already exists." in result.output

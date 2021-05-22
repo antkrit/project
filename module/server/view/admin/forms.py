@@ -12,11 +12,9 @@ class SearchUserForm(FlaskForm):
     Fields: username - login of the user.
     Buttons: search_button - sends data from field to the server for processing.
     """
-    username = StringField(
-        'Username',
-        validators=[Length(3, 64)]
-    )
-    search_button = SubmitField('Search')
+
+    username = StringField("Username", validators=[Length(3, 64)])
+    search_button = SubmitField("Search")
 
 
 class InteractButtonsForm(FlaskForm):
@@ -25,10 +23,11 @@ class InteractButtonsForm(FlaskForm):
     Buttons: register_button - register a new user, activate_button - set "activated" status to the account,
     deactivate_button - set "deactivated" status to the account, delete_button - delete user from the database.
     """
-    register_button = SubmitField('Register')
-    activate_button = SubmitField('Activate')
-    deactivate_button = SubmitField('Deactivate')
-    delete_button = SubmitField('Delete')
+
+    register_button = SubmitField("Register")
+    activate_button = SubmitField("Activate")
+    deactivate_button = SubmitField("Deactivate")
+    delete_button = SubmitField("Delete")
 
 
 class RegisterForm(FlaskForm):
@@ -39,46 +38,31 @@ class RegisterForm(FlaskForm):
     password, repeat_password - future user password (must be equal).
     Buttons: submit - sends data from fields to the server for processing.
     """
+
     username = StringField(
-        'Username',
+        "Username",
         validators=[DataRequired(), Length(min=3)],
-        render_kw={'placeholder': '*Username'}
+        render_kw={"placeholder": "*Username"},
     )
-    email = StringField(
-        'Email',
-        render_kw={'placeholder': 'Email'},
-        filters=[lambda x: x or None]
-    )
-    phone = StringField(
-        'Phone',
-        validators=[DataRequired()],
-        render_kw={'placeholder': '*Phone'}
-    )
-    name = StringField(
-        'Name',
-        validators=[DataRequired()],
-        render_kw={'placeholder': '*Full name'}
-    )
-    address = StringField(
-        'Address',
-        validators=[DataRequired()],
-        render_kw={'placeholder': '*Address'}
-    )
-    tariff_select = SelectField(
-        'Tariff',
-        validators=[DataRequired()]
-    )
+    email = StringField("Email", render_kw={"placeholder": "Email"}, filters=[lambda x: x or None])
+    phone = StringField("Phone", validators=[DataRequired()], render_kw={"placeholder": "*Phone"})
+    name = StringField("Name", validators=[DataRequired()], render_kw={"placeholder": "*Full name"})
+    address = StringField("Address", validators=[DataRequired()], render_kw={"placeholder": "*Address"})
+    tariff_select = SelectField("Tariff", validators=[DataRequired()])
     password = PasswordField(
-        'Password',
+        "Password",
         validators=[DataRequired(), Length(min=4)],
-        render_kw={'placeholder': '*Password', 'autocomplete': 'off'}
+        render_kw={"placeholder": "*Password", "autocomplete": "off"},
     )
     repeat_password = PasswordField(
-        'Password',
-        validators=[DataRequired(), EqualTo('password', message='Passwords must match\n')],
-        render_kw={'placeholder': '*Repeat password', 'autocomplete': 'off'}
+        "Password",
+        validators=[
+            DataRequired(),
+            EqualTo("password", message="Passwords must match\n"),
+        ],
+        render_kw={"placeholder": "*Repeat password", "autocomplete": "off"},
     )
-    submit = SubmitField('Register', render_kw={'class': 'btn'})
+    submit = SubmitField("Register", render_kw={"class": "btn"})
 
     def validate_username(self, username):
         """
@@ -90,10 +74,10 @@ class RegisterForm(FlaskForm):
         username_pattern = compile(r"^[A-Za-z0-9]+$")
 
         if not username_pattern.findall(self.username.data):
-            raise ValidationError('Username is not correct.')
+            raise ValidationError("Username is not correct.")
 
         if User.query.filter_by(username=self.username.data).first():
-            raise ValidationError('This username already exists.')
+            raise ValidationError("This username already exists.")
 
     def validate_phone(self, phone):
         """
@@ -105,10 +89,10 @@ class RegisterForm(FlaskForm):
         phone_pattern = compile(r"^[+0-9]{10,13}$")
 
         if not phone_pattern.findall(self.phone.data):
-            raise ValidationError('Phone number is not correct.')
+            raise ValidationError("Phone number is not correct.")
 
         if User.query.filter_by(phone=self.phone.data).first():
-            raise ValidationError('This phone already exists.')
+            raise ValidationError("This phone already exists.")
 
     def validate_email(self, email):
         """
@@ -120,4 +104,4 @@ class RegisterForm(FlaskForm):
         email_pattern = compile(r"^[a-zA-Z0-9]+[@][a-z]+\.[a-z]+$")
 
         if self.email.data and not email_pattern.findall(self.email.data):
-            raise ValidationError('Email address is not correct.')
+            raise ValidationError("Email address is not correct.")

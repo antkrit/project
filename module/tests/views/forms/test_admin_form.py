@@ -55,4 +55,3 @@ def test_validation(init_app):
             assert True
         except ValidationError:  # if validation error was raised - something goes wrong
             assert False
-

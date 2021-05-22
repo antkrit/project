@@ -10,8 +10,9 @@ class PaymentCardForm(FlaskForm):
     Fields: username - login of the user, password - password of the user
     Buttons: submit - sends data from fields to the server for processing
     """
+
     code = StringField(
-        'Code',
+        "Code",
         validators=[DataRequired(), Length(1, 64)],
     )
-    submit = SubmitField('Enter')
+    submit = SubmitField("Enter")

@@ -9,6 +9,7 @@ db = App.db
 
 class TokenBlocklist(Base, db.Model):
     """Block list table for saving expired JWT tokens"""
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
     jti = db.Column(db.String(36), nullable=False)

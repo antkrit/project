@@ -5,6 +5,6 @@ Routes:
 """
 from flask import Blueprint
 
-bp = Blueprint('login', __name__)
+bp = Blueprint("login", __name__)
 
 from module.server.view.login import routes

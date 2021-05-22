@@ -19,5 +19,6 @@ before_script:
 script:
   - python3 -m pip install -e .
   - pytest --cov
+  - black -l 120 module --check
 after_success:
   - coveralls

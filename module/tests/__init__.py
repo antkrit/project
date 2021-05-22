@@ -42,30 +42,24 @@ def init_app():
     app_context.push()
     db.create_all()
 
-    adm_usr = User(username='admin', password='test')
+    adm_usr = User(username="admin", password="test")
     db.session.add(adm_usr)
 
-    to_test_del = User(username='test_del', password='test')
+    to_test_del = User(username="test_del", password="test")
     db.session.add(to_test_del)
 
-    usr = User(username='john', password='test')
+    usr = User(username="john", password="test")
     db.session.add(usr)
 
-    usr1 = User(username='andre', password='test')
+    usr1 = User(username="andre", password="test")
     db.session.add(usr1)
 
     for i in range(2):
-        card = Card(
-            amount=200,
-            code=str(i).rjust(6, '0')
-        )
+        card = Card(amount=200, code=str(i).rjust(6, "0"))
         db.session.add(card)
 
     for i in range(2, 4):
-        card = Card(
-            amount=400,
-            code=str(i).rjust(6, '0')
-        )
+        card = Card(amount=400, code=str(i).rjust(6, "0"))
         db.session.add(card)
 
     db.session.commit()
@@ -107,8 +101,8 @@ def dataset(setup_database):
     db = setup_database
 
     # Creates users
-    john = User(username='john', password='test')
-    andre = User(username='andre', password='test')
+    john = User(username="john", password="test")
+    andre = User(username="andre", password="test")
     db.session.add(john)
     db.session.add(andre)
     db.session.commit()
@@ -123,10 +117,7 @@ def login_user(client, username, password):
     :param username: login of the user
     :param password: password of the user
     """
-    return client.post('/', data=dict(
-        username=username,
-        password=password
-    ), follow_redirects=True)
+    return client.post("/", data=dict(username=username, password=password), follow_redirects=True)
 
 
 def logout_user(client):
@@ -134,7 +125,7 @@ def logout_user(client):
     User logout on POST request to logout iew
     :param client: test client of the flask application
     """
-    return client.get('/logout', follow_redirects=True)
+    return client.get("/logout", follow_redirects=True)
 
 
 def get_access_token(client, data):
@@ -144,8 +135,6 @@ def get_access_token(client, data):
     :param data: data to be sent in the request(login, password)
     """
     response_get_login_route_admin = client.get(
-        url_for('api_auth'),
-        headers={'Content-Type': 'application/json'},
-        data=data
+        url_for("api_auth"), headers={"Content-Type": "application/json"}, data=data
     )
-    return response_get_login_route_admin.json.get('access_token')
+    return response_get_login_route_admin.json.get("access_token")

@@ -7,6 +7,7 @@ Flask-DebugToolBar==0.11.0
 pylint==2.8.2; sys_platform==="win32"
 pylint<2.8.2; sys_platform!="win32"
 pylint_flask_sqlalchemy==0.2.0
+black==21.5b1
 
 # Testing
 pytest==6.2.4
