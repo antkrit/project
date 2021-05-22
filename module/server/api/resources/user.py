@@ -8,13 +8,18 @@ from flask_jwt_extended import (
     create_access_token,
     create_refresh_token,
     get_jwt_identity,
-    decode_token
+    decode_token,
 )
 from module.server import messages
 from module.server.models.user import User
 from module.server.models.payment_cards import Card
 from module.server.models.jwt_tokens import TokenBlocklist
-from module.server.api.schemas.user import LoginSchema, RegisterSchema, AdminUserInfoSchema, FullUserInfoSchema
+from module.server.api.schemas.user import (
+    LoginSchema,
+    RegisterSchema,
+    AdminUserInfoSchema,
+    FullUserInfoSchema,
+)
 from module.server.api.schemas.payment_cards import UsedCardSchema, InputCardSchema
 
 
@@ -69,8 +74,8 @@ class UserAuthResource(Resource):
         """
         data = LoginSchema().load(request.get_json())
 
-        login = data.get('login')
-        password = data.get('password')
+        login = data.get("login")
+        password = data.get("password")
 
         user = User.get_user_by_username(login)
 
@@ -79,33 +84,33 @@ class UserAuthResource(Resource):
             refresh_token = create_refresh_token(user.uuid)
             decoded = decode_token(access_token)
             return {
-                'access_token': access_token,
-                'refresh_token': refresh_token,
-                'fresh': decoded['fresh'],
-                'expires_in': decoded['exp']
+                "access_token": access_token,
+                "refresh_token": refresh_token,
+                "fresh": decoded["fresh"],
+                "expires_in": decoded["exp"],
             }, 200
         # if user doesn't exist or login and password don't match - return 401
-        return {'message': 'Unable to login.'}, 401
+        return {"message": "Unable to login."}, 401
 
     @jwt_required()
     def post(self):
         """Creates new user and save it to the database. Available only for admin"""
 
         curr_user = User.get_by_uuid(get_jwt_identity())
-        if curr_user.username != 'admin':
-            return {'message': messages['access_denied']}, 403
+        if curr_user.username != "admin":
+            return {"message": messages["access_denied"]}, 403
 
         data = request.get_json()
         user = RegisterSchema().load(data)
 
-        if User.get_user_by_username(data['username']):
-            return {'message': 'This user already exists.'}, 400
+        if User.get_user_by_username(data["username"]):
+            return {"message": "This user already exists."}, 400
 
         try:
             user.save_to_db()
-            return {'message': messages['success_register']}, 201
+            return {"message": messages["success_register"]}, 201
         except ValueError as e:
-            return {'message': messages['failure'] + ' Error - {0}'.format(e)}, 500
+            return {"message": messages["failure"] + " Error - {0}".format(e)}, 500
 
 
 class LogoutUser(Resource):
@@ -128,12 +133,12 @@ class LogoutUser(Resource):
     @jwt_required()
     def post(self):
         """Logout user. The user must be logged in first."""
-        jti = get_jwt()['jti']
+        jti = get_jwt()["jti"]
         user = User.get_by_uuid(get_jwt_identity())
 
-        token = TokenBlocklist(user_id=user.id, jti=jti, reason='Logout')
+        token = TokenBlocklist(user_id=user.id, jti=jti, reason="Logout")
         token.save_to_db()
-        return {'message': messages['success']}, 200
+        return {"message": messages["success"]}, 200
 
 
 class UserResource(Resource):
@@ -175,34 +180,35 @@ class UserResource(Resource):
                 content:
                     application/json
     """
+
     @jwt_required()
     def get(self, uuid: str):
         """Returns info about user"""
         curr_user = User.get_by_uuid(get_jwt_identity())
-        if curr_user.username != 'admin' and curr_user.uuid != uuid:
+        if curr_user.username != "admin" and curr_user.uuid != uuid:
             # if current user is not admin or account owner return 403
-            return {'message': messages['access_denied']}, 403
+            return {"message": messages["access_denied"]}, 403
 
-        user_schema = AdminUserInfoSchema() if curr_user.username == 'admin' else FullUserInfoSchema()
+        user_schema = AdminUserInfoSchema() if curr_user.username == "admin" else FullUserInfoSchema()
 
         user = User.get_by_uuid(uuid)
         if user:
             return user_schema.dump(user), 200
-        return {'message': messages['user_not_found']}, 404  # if uuid is wrong return 404
+        return {"message": messages["user_not_found"]}, 404  # if uuid is wrong return 404
 
     @jwt_required()
     def post(self, uuid: str):
         """Use card"""
         curr_user = User.get_by_uuid(get_jwt_identity())
         if curr_user.uuid != uuid:  # if current user is not account owner return 403
-            return {'message': messages['access_denied']}, 403
+            return {"message": messages["access_denied"]}, 403
 
         data = InputCardSchema().load(request.get_json())
 
-        if Card.get_card_by_code(data['code']):  # if card code is correct - replenish user account
-            curr_user.use_card(data['code'])
-            return {'message': messages['card_success_code']}, 200
-        return {'message': messages['card_wrong_code']}, 404  # if card code is wrong return 404
+        if Card.get_card_by_code(data["code"]):  # if card code is correct - replenish user account
+            curr_user.use_card(data["code"])
+            return {"message": messages["card_success_code"]}, 200
+        return {"message": messages["card_wrong_code"]}, 404  # if card code is wrong return 404
 
 
 class UserHistoryResource(Resource):
@@ -222,6 +228,7 @@ class UserHistoryResource(Resource):
                 content:
                     application/json
     """
+
     @jwt_required()
     def get(self, uuid: str):
         """Returns user payment history(This route is not protected: each user can see the story of another)"""
@@ -231,7 +238,7 @@ class UserHistoryResource(Resource):
         if curr_user:  # if uuid is correct return history
             history = curr_user.get_history()
             return used_cards_schema.dump(history), 200
-        return {'message': messages['user_not_found']}, 404  # otherwise return 404
+        return {"message": messages["user_not_found"]}, 404  # otherwise return 404
 
 
 class UsersResource(Resource):
@@ -247,11 +254,12 @@ class UsersResource(Resource):
                 content:
                     application/json
     """
+
     @jwt_required()
     def get(self):
         """Returns list of users if current user is admin, else user's account info"""
         curr_user = User.get_by_uuid(get_jwt_identity())
-        if curr_user.username == 'admin':  # if current user is admin show common user information(AdminUserInfoSchema)
+        if curr_user.username == "admin":  # if current user is admin show common user information(AdminUserInfoSchema)
             users_schema = AdminUserInfoSchema(many=True)
             all_users = User.query.all()
             return users_schema.dump(all_users), 200
@@ -281,8 +289,8 @@ class TokenRefresh(Resource):
         new_refresh_token = create_refresh_token(current_id)
         decoded = decode_token(new_token)
         return {
-            'access_token': new_token,
-            'refresh_token': new_refresh_token,
-            'fresh': decoded['fresh'],
-            'expires_in': decoded['exp']
+            "access_token": new_token,
+            "refresh_token": new_refresh_token,
+            "fresh": decoded["fresh"],
+            "expires_in": decoded["exp"],
         }, 200

@@ -6,20 +6,20 @@ WARNING: don't use this file in production
 import os
 from sys import platform
 from flask import Flask
-from app import app
+from module.app import app
 
 this_files_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(this_files_dir)
 
-if __name__ == '__main__':
-    if platform == 'win32':
+if __name__ == "__main__":
+    if platform == "win32":
         from waitress import serve
 
-        host, port = '127.0.0.1', 8001
+        host, port = "127.0.0.1", 8001
 
         print("Application startup on http://{0}:{1}".format(host, port))
         serve(app, host=host, port=port)  # http://127.0.0.1:8001
-    elif platform != 'win32':
+    elif platform != "win32":
         import multiprocessing
         from gunicorn.app.base import BaseApplication
 
@@ -48,8 +48,9 @@ if __name__ == '__main__':
 
             def load_config(self) -> None:
                 """Set options"""
-                config = {key: value for key, value in self.options.items()
-                          if key in self.cfg.settings and value is not None}
+                config = {
+                    key: value for key, value in self.options.items() if key in self.cfg.settings and value is not None
+                }
                 for key, value in config.items():
                     self.cfg.set(key.lower(), value)
 
@@ -58,7 +59,7 @@ if __name__ == '__main__':
                 return self.application
 
         custom_options = {
-            'bind': '%s:%s' % ('127.0.0.1', '8080'),
-            'workers': number_of_workers(),
+            "bind": "%s:%s" % ("127.0.0.1", "8080"),
+            "workers": number_of_workers(),
         }
         StandaloneApplication(app, custom_options).run()  # http://127.0.0.1:8080

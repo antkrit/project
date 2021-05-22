@@ -12,8 +12,8 @@ class CardSchema(ma.SQLAlchemyAutoSchema):
 
     class Meta:
         model = Card
-        fields = ('uuid', 'amount', 'code')
-        dump_only = ('uuid',)
+        fields = ("uuid", "amount", "code")
+        dump_only = ("uuid",)
 
 
 class UsedCardSchema(ma.SQLAlchemyAutoSchema):
@@ -21,11 +21,12 @@ class UsedCardSchema(ma.SQLAlchemyAutoSchema):
 
     class Meta:
         model = UsedCard
-        fields = ('uuid', 'amount', 'code', 'used_at')
-        dump_only = ('uuid', 'used_at')
+        fields = ("uuid", "amount", "code", "used_at")
+        dump_only = ("uuid", "used_at")
         include_fk = True
 
 
 class InputCardSchema(Schema):
     """Schema to receive payment card code"""
+
     code = fields.Str(required=True)

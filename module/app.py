@@ -12,4 +12,5 @@ runner.register_cli_commands(populate_cli)
 # Flask app. Required for migration
 app = runner.get_flask_app()
 
-runner.run(__name__)
+if __name__ == "__main__":
+    runner.run(__name__)

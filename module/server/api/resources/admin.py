@@ -38,22 +38,22 @@ class AdminToolsResource(Resource):
     def post(self, uuid):
         """Work with user account"""
         curr_user = User.get_by_uuid(get_jwt_identity())
-        if curr_user.username != 'admin':  # if current is not admin
-            return {'message': messages['access_denied']}, 403
+        if curr_user.username != "admin":  # if current is not admin
+            return {"message": messages["access_denied"]}, 403
 
         data = AdminChoiceSchema().load(request.get_json())
         user_to_work = User.get_by_uuid(uuid)
 
-        if data['choice'] == 'activate':
+        if data["choice"] == "activate":
             user_to_work.change_state()
-            return {'message': messages['activate_state_success']}, 200
-        elif data['choice'] == 'deactivate':
+            return {"message": messages["activate_state_success"]}, 200
+        elif data["choice"] == "deactivate":
             user_to_work.change_state(deactivate=True)
-            return {'message': messages['deactivate_state_success']}, 200
-        elif data['choice'] == 'delete':
+            return {"message": messages["deactivate_state_success"]}, 200
+        elif data["choice"] == "delete":
             try:
                 # if everything is okay - user will be deleted from the database
                 user_to_work.delete_from_db()
-                return {'message': messages['success']}, 200
+                return {"message": messages["success"]}, 200
             except Exception as e:
-                return {'message': messages['failure'] + ' Error: {0}'.format(e)}, 500
+                return {"message": messages["failure"] + " Error: {0}".format(e)}, 500

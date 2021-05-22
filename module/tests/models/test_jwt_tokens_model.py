@@ -10,7 +10,7 @@ def test_check_if_token_in_blocklist(dataset):
     db = dataset
 
     decoded = decode_token(create_access_token(identity=1))
-    token = TokenBlocklist(user_id=1, jti=decoded['jti'])
+    token = TokenBlocklist(user_id=1, jti=decoded["jti"])
     token.save_to_db()
 
-    assert check_if_token_in_blocklist(jwt_handler=None, jwt_payload={'jti': decoded['jti']})
+    assert check_if_token_in_blocklist(jwt_handler=None, jwt_payload={"jti": decoded["jti"]})

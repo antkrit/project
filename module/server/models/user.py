@@ -17,16 +17,18 @@ login_manager = App.login_manager
 
 class Tariffs(Enum):
     """Available tariffs"""
-    tariff_50m = dict(tariff_name='50m', cost=100)
-    tariff_100m = dict(tariff_name='100m', cost=200)
-    tariff_200m = dict(tariff_name='200m', cost=300)
-    tariff_500m = dict(tariff_name='500m', cost=500)
+
+    tariff_50m = dict(tariff_name="50m", cost=100)
+    tariff_100m = dict(tariff_name="100m", cost=200)
+    tariff_200m = dict(tariff_name="200m", cost=300)
+    tariff_500m = dict(tariff_name="500m", cost=500)
 
 
 class State(Enum):
     """Available states for the account"""
-    activated_state = 'activated'
-    deactivated_state = 'deactivated'
+
+    activated_state = "activated"
+    deactivated_state = "deactivated"
 
 
 class User(Base, UserMixin, db.Model):
@@ -52,6 +54,7 @@ class User(Base, UserMixin, db.Model):
     :param uuid: custom uuid of the user, defaults to None
     :type uuid: str, optional
     """
+
     id = db.Column(db.Integer, primary_key=True)
     uuid = db.Column(db.String, index=True, unique=True, default=generate_uuid)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -66,10 +69,20 @@ class User(Base, UserMixin, db.Model):
     state = db.Column(db.String(64), server_default=State.deactivated_state.value)
     balance = db.Column(db.Float, default=0)
 
-    used_cards = db.relationship('UsedCard', backref='user', lazy='dynamic')
+    used_cards = db.relationship("UsedCard", backref="user", lazy="dynamic")
 
-    def __init__(self, username, password, name=None, email=None, phone=None, address=None,
-                 tariff=None, state=None, uuid=None):
+    def __init__(
+        self,
+        username,
+        password,
+        name=None,
+        email=None,
+        phone=None,
+        address=None,
+        tariff=None,
+        state=None,
+        uuid=None,
+    ):
         self.uuid = uuid
         self.username = username
         self.set_password(password)
@@ -83,7 +96,16 @@ class User(Base, UserMixin, db.Model):
 
     def get_info(self) -> list:
         """Returns list of user information"""
-        return [self.address, self.name, self.ip, self.phone, self.email, self.tariff, self.balance, self.state]
+        return [
+            self.address,
+            self.name,
+            self.ip,
+            self.phone,
+            self.email,
+            self.tariff,
+            self.balance,
+            self.state,
+        ]
 
     def change_state(self, deactivate=False) -> None:
         """
@@ -109,14 +131,14 @@ class User(Base, UserMixin, db.Model):
                 code=card_code,
                 balance_after_use=self.balance,
                 used_at=datetime.now(timezone.utc),
-                user_id=self.id
+                user_id=self.id,
             )
 
             used.save_to_db()
             card.delete_from_db()
-            flash(messages['card_success_code'], "info")
+            flash(messages["card_success_code"], "info")
         else:
-            flash(messages['card_wrong_code'], "warning")
+            flash(messages["card_wrong_code"], "warning")
 
     def get_history(self) -> list:
         """Returns payments history (last 10 rows)"""
@@ -146,7 +168,7 @@ class User(Base, UserMixin, db.Model):
         :param test_ip: ip address that can be entered manually, defaults to None
         :type test_ip:str, optional
         """
-        rand_ip = '.'.join([str(randint(0, 255)) for _ in range(4)]) if not test_ip else test_ip
+        rand_ip = ".".join([str(randint(0, 255)) for _ in range(4)]) if not test_ip else test_ip
         # if such ip doesn't yet exist and there is no test ip
         if not db.session.query(User).filter_by(ip=rand_ip).first() and not test_ip:
             self.ip = rand_ip
@@ -166,7 +188,7 @@ class User(Base, UserMixin, db.Model):
 
     def __repr__(self) -> str:
         """Returns representative string that displays the username of the user"""
-        return 'User: {}'.format(self.username)
+        return "User: {}".format(self.username)
 
 
 @login_manager.user_loader

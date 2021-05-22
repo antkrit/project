@@ -15,10 +15,7 @@ from flask_marshmallow import Marshmallow
 from module.server.config import Config, TestConfig
 
 
-with open((os.path.join(os.path.dirname(__file__), 'server', 'static', 'pkg_info.json'))) as info:
-    _info = load(info)
-
-__version__ = _info['version']
+__version__ = "1.0.4"
 
 
 class App:
@@ -37,18 +34,22 @@ class App:
     moment = Moment()
     jwt = JWTManager()
     login_manager = LoginManager()
-    login_manager.login_view = 'login.login_view'
-    login_manager.session_protection = 'strong'
+    login_manager.login_view = "login.login_view"
+    login_manager.session_protection = "strong"
 
-    def __init__(self,  testing=False, config_obj=Config):
+    def __init__(self, testing=False, config_obj=Config):
         # Folders
-        self.migration_folder = os.path.join(os.path.dirname(__file__), 'server', 'models', 'migrations')
-        self.templates_folder = os.path.join(os.path.dirname(__file__), 'client', 'templates')
-        self.static_folder = os.path.join(os.path.dirname(__file__), 'client', 'static')
-        self.logs_folder = os.path.join(os.path.dirname(__file__), 'server', 'static', 'logs')
+        self.migration_folder = os.path.join(os.path.dirname(__file__), "server", "models", "migrations")
+        self.templates_folder = os.path.join(os.path.dirname(__file__), "client", "templates")
+        self.static_folder = os.path.join(os.path.dirname(__file__), "client", "static")
+        self.logs_folder = os.path.join(os.path.dirname(__file__), "server", "static", "logs")
 
         # App
-        self._app = Flask(__name__, template_folder=self.templates_folder, static_folder=self.static_folder)
+        self._app = Flask(
+            __name__,
+            template_folder=self.templates_folder,
+            static_folder=self.static_folder,
+        )
         if testing:  # Choose configuration
             self._app.config.from_object(TestConfig)
         else:
@@ -57,8 +58,13 @@ class App:
         # Init
         App.db.init_app(self._app)
         with self._app.app_context():  # Fixing ALTER table SQLite issue
-            if App.db.engine.url.drivername == 'sqlite':
-                App.migrate.init_app(self._app, App.db, render_as_batch=True, directory=self.migration_folder)
+            if App.db.engine.url.drivername == "sqlite":
+                App.migrate.init_app(
+                    self._app,
+                    App.db,
+                    render_as_batch=True,
+                    directory=self.migration_folder,
+                )
             else:
                 App.migrate.init_app(self._app, App.db, directory=self.migration_folder)
 
@@ -66,8 +72,10 @@ class App:
         App.login_manager.init_app(self._app)
         App.moment.init_app(self._app)
         App.jwt.init_app(self._app)
+
         # Api
         from module.server.api.resources import api
+
         api.init_app(self._app)
 
         self.setup_logging_error_handling()
@@ -124,13 +132,9 @@ class App:
         if not os.path.exists(path_to_logs):
             os.mkdir(path_to_logs)
 
-        file_handler = RotatingFileHandler(
-            os.path.join(path_to_logs, 'main.log'),
-            maxBytes=10240,
-            backupCount=5
-        )
+        file_handler = RotatingFileHandler(os.path.join(path_to_logs, "main.log"), maxBytes=10240, backupCount=5)
         file_handler.setFormatter(
-            logging.Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')
+            logging.Formatter("%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]")
         )
 
         self._app.logger.addHandler(file_handler)
@@ -139,18 +143,21 @@ class App:
         # Email notifications about failures
         auth = secure = None
 
-        if self._app.config['MAIL_USERNAME'] and self._app.config['MAIL_PASSWORD']:
-            auth = (self._app.config['MAIL_USERNAME'], self._app.config['MAIL_PASSWORD'])
-        if self._app.config['MAIL_USE_TLS']:
+        if self._app.config["MAIL_USERNAME"] and self._app.config["MAIL_PASSWORD"]:
+            auth = (
+                self._app.config["MAIL_USERNAME"],
+                self._app.config["MAIL_PASSWORD"],
+            )
+        if self._app.config["MAIL_USE_TLS"]:
             secure = ()
 
         mail_handler = SMTPHandler(
-            mailhost=(self._app.config['MAIL_SERVER'], self._app.config['MAIL_PORT']),
-            fromaddr='no-reply@cabinet.support',
-            toaddrs=self._app.config['ADMINS'],
-            subject='Cabinet Error',
+            mailhost=(self._app.config["MAIL_SERVER"], self._app.config["MAIL_PORT"]),
+            fromaddr="no-reply@cabinet.support",
+            toaddrs=self._app.config["ADMINS"],
+            subject="Cabinet Error",
             credentials=auth,
-            secure=secure
+            secure=secure,
         )
         mail_handler.setLevel(logging.ERROR)
         self._app.logger.addHandler(mail_handler)
@@ -172,9 +179,13 @@ class App:
         :type name: str
         """
 
-        if name == '__main__':
+        if name == "__main__":
             # Run the application if file was started directly ($ python name.py)
             self._app.run(debug=True)
 
 
-from module.server.models import user, payment_cards, jwt_tokens  # these imports are required for migration
+from module.server.models import (
+    user,
+    payment_cards,
+    jwt_tokens,
+)  # these imports are required for migration
