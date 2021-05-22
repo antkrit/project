@@ -42,7 +42,7 @@ python -m venv .venv
 
 - **Install dependencies:**
 
-*Development requirements (include production requirements)*
+*Development requirements (includes production requirements)*
 ```bash
 python -m pip install -r requirements.txt
 python -m pip install -e .
@@ -91,13 +91,6 @@ Web app will be available locally:
 
 > API root: `/api/v1/`
 
-## Tests:
-**Run tests with coverage report:**
-```bash
-pytest --cov
-```
-All tests are stored in [module/tests](module/tests/)
-
 ## Module structure
 ```
 module/
@@ -142,7 +135,7 @@ Run flask application
 ├── app.py
 ```
 
-Run wsgi application with waitress(On Windows) or gunicorn(Linux)
+Run wsgi application with waitress(on Windows) or gunicorn(Linux)
 ```
 └── run.py
 ```
@@ -211,4 +204,24 @@ Store all config objects in this file:
 Store all tests in this directory:
 ```
 ├── tests/
+```
+
+## Additional utilities
+
+All configs for utilities are in [setup.cfg](setup.cfg) file
+
+- Run tests with coverage report:
+```bash
+pytest --cov
+```
+> All tests are stored in [module/tests](module/tests/)
+
+- Code analysis:
+```bash
+pylint module
+```
+
+- Format code:
+```bash
+black -l 120 module
 ```
