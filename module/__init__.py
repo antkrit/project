@@ -1,7 +1,6 @@
 """Initializes all dependencies and creates apps"""
 import os
 import logging
-from json import load
 from datetime import timedelta
 from logging.handlers import RotatingFileHandler, SMTPHandler
 from marshmallow import ValidationError
@@ -15,7 +14,7 @@ from flask_marshmallow import Marshmallow
 from module.server.config import Config, TestConfig
 
 
-__version__ = "1.0.4"
+__version__ = "1.0.5"
 
 
 class App:

@@ -103,9 +103,9 @@ module/
     ├── server/
     |   ├── api/
     |   |   ├── resources/
-    |   |   |   ├── ...
+    |   |   |   └── ...
     |   |   └── schemas/
-    |   |       ├── ...
+    |   |       └── ...
     |   ├── models/
     |   |   ├── migrations/
     |   |   └── ...
@@ -214,7 +214,7 @@ All configs for utilities are in [setup.cfg](setup.cfg) file
 ```bash
 pytest --cov
 ```
-> All tests are stored in [module/tests](module/tests/)
+> All tests are stored in [tests](module/tests/) folder
 
 - Code analysis:
 ```bash
