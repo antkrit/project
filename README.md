@@ -30,14 +30,14 @@ cd project
 
 *Linux:*
 ```bash
-virtualenv -p python .venv
+virtualenv .venv
 source .venv/bin/activate
 ```
 
 *Windows:*
 ```bash
-python -m venv .venv
-<full-path-to-project>\.venv\Scripts\activate.bat
+virtualenv .venv
+.venv\Scripts\activate
 ```
 
 - **Install dependencies:**
